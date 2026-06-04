@@ -1,0 +1,4 @@
+legal/
+.venv/
+__pycache__/
+assets/_process_logo.py

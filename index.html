@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AGBLAB AI — AI-агенты и сайты для вашего бизнеса</title>
 <meta name="description" content="AGBLAB AI — создаём AI-агентов, автоматизацию и продающие сайты для предпринимателей и селлеров маркетплейсов. Под ключ, быстро, с результатом.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/badge.png">
 <style>
 :root{
   --bg:#0b0c10;
@@ -31,11 +33,37 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(12px)
   background:rgba(10,10,15,.7);border-bottom:1px solid transparent;transition:.3s}
 header.scrolled{border-bottom:1px solid var(--line)}
 nav{display:flex;align-items:center;justify-content:space-between;height:68px}
-.logo{font-weight:800;font-size:20px;letter-spacing:-.5px;display:flex;align-items:center;gap:11px}
-.logo svg{width:34px;height:34px;filter:drop-shadow(0 0 10px var(--glow))}
-.logo .ai{color:var(--accent);font-weight:800}
+.logo{display:flex;align-items:center}
+.logo img{height:38px;width:auto;display:block;filter:drop-shadow(0 0 12px var(--glow))}
+@media(max-width:760px){.logo img{height:32px}}
 .nav-links{display:flex;gap:30px;font-size:15px;color:var(--mut)}
+.nav-links a{position:relative;transition:.2s}
 .nav-links a:hover{color:var(--txt)}
+.nav-links a.active{color:var(--accent)}
+.nav-links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--accent);border-radius:2px}
+
+/* бургер + мобильное меню */
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:8px;margin:-8px}
+.burger span{width:24px;height:2px;background:var(--txt);border-radius:2px;transition:.25s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{position:fixed;top:68px;left:0;right:0;z-index:49;display:flex;flex-direction:column;
+  gap:2px;padding:14px 24px 22px;background:rgba(11,12,16,.98);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);transform:translateY(-14px);opacity:0;pointer-events:none;transition:.25s}
+.mobile-menu.open{transform:none;opacity:1;pointer-events:auto}
+.mobile-menu a{padding:14px 4px;font-size:17px;color:var(--mut);border-bottom:1px solid var(--line)}
+.mobile-menu a:hover{color:var(--txt)}
+.mobile-menu .btn{margin-top:14px;justify-content:center;border-bottom:0;color:#fff}
+@media(max-width:760px){.burger{display:flex}.nav-cta{display:none}}
+
+/* кнопка наверх */
+.to-top{position:fixed;right:20px;bottom:20px;z-index:48;width:46px;height:46px;border-radius:13px;
+  background:var(--accent);color:#fff;border:0;cursor:pointer;font-size:20px;line-height:1;
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;
+  transition:.25s;box-shadow:0 10px 30px var(--glow)}
+.to-top.show{opacity:1;pointer-events:auto}
+.to-top:hover{transform:translateY(-3px)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
   background:var(--accent);color:#fff;font-weight:700;font-size:15px;
   padding:13px 24px;border-radius:12px;border:none;cursor:pointer;transition:.2s;white-space:nowrap}
@@ -54,10 +82,11 @@ nav{display:flex;align-items:center;justify-content:space-between;height:68px}
 .pill .live{width:8px;height:8px;border-radius:50%;background:var(--accent);
   box-shadow:0 0 0 0 var(--glow);animation:pulse 2s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 var(--glow)}70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
-.hero h1{font-size:clamp(36px,6vw,68px);font-weight:800;letter-spacing:-1.5px;line-height:1.05;margin-bottom:24px}
+.hero h1{font-size:clamp(34px,6vw,66px);font-weight:800;letter-spacing:-1.5px;line-height:1.08;
+  margin:0 auto 24px;max-width:12em;text-wrap:balance}
 .hero h1 .grad{background:linear-gradient(120deg,var(--accent),var(--accent2));
   -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{font-size:clamp(17px,2.2vw,21px);color:var(--mut);max-width:680px;margin:0 auto 38px}
+.hero p{font-size:clamp(17px,2.2vw,21px);color:var(--mut);max-width:660px;margin:0 auto 38px;text-wrap:pretty}
 .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 .trust{margin-top:48px;display:flex;gap:40px;justify-content:center;flex-wrap:wrap;color:var(--mut);font-size:14px}
 .trust b{color:var(--txt);font-size:26px;font-weight:800;display:block}
@@ -65,13 +94,17 @@ nav{display:flex;align-items:center;justify-content:space-between;height:68px}
 /* sections */
 section{padding:90px 0}
 .eyebrow{color:var(--accent);font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;text-align:center}
-.h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;text-align:center;margin-bottom:18px}
-.sub{color:var(--mut);text-align:center;max-width:620px;margin:0 auto 56px;font-size:18px}
+.h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-1px;text-align:center;margin-bottom:18px;text-wrap:balance}
+.sub{color:var(--mut);text-align:center;max-width:620px;margin:0 auto 56px;font-size:18px;text-wrap:balance}
 
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 @media(max-width:880px){.grid{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px;transition:.25s}
+.card{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px;transition:.25s}
+.card::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%),rgba(255,59,59,.14),transparent 60%)}
+.card:hover::before{opacity:1}
 .card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.card>*{position:relative}
 .card .ico{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;
   font-size:26px;background:linear-gradient(135deg,rgba(110,231,168,.18),rgba(59,130,246,.12));margin-bottom:20px}
 .card h3{font-size:21px;margin-bottom:10px;font-weight:700}
@@ -135,9 +168,8 @@ section{padding:90px 0}
 .msg-btn:hover{transform:translateY(-3px)}
 .msg-btn svg{width:24px;height:24px}
 .msg-btn.tg{background:#2aabee;box-shadow:0 10px 30px rgba(42,171,238,.3)}
-.msg-btn.max{background:linear-gradient(135deg,#7b3ff2,#b04bff);box-shadow:0 10px 30px rgba(140,60,240,.3)}
-.max-ico{width:24px;height:24px;border-radius:7px;background:rgba(255,255,255,.22);
-  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.msg-btn.max{background:linear-gradient(135deg,#4f7cf7,#a24bff);box-shadow:0 10px 30px rgba(140,60,240,.3)}
+.msg-ico-img{width:27px;height:27px;border-radius:8px;display:block;flex-shrink:0}
 .msg-note{text-align:center;color:var(--mut);font-size:14px}
 
 footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-size:14px}
@@ -153,32 +185,34 @@ footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-siz
 <header id="hdr">
   <div class="wrap">
     <nav>
-      <div class="logo">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M50 4 L91 27 V73 L50 96 L9 73 V27 Z" stroke="#ff3b3b" stroke-width="6" fill="rgba(255,59,59,.07)"/>
-          <circle cx="50" cy="38" r="7" fill="#ff3b3b"/>
-          <circle cx="34" cy="62" r="6" fill="#ff7a45"/>
-          <circle cx="66" cy="62" r="6" fill="#ff7a45"/>
-          <path d="M50 45 L34 56 M50 45 L66 56 M34 62 L66 62" stroke="#ff3b3b" stroke-width="4" stroke-linecap="round"/>
-        </svg>
-        AGBLAB<span class="ai">AI</span>
-      </div>
+      <a href="#" class="logo"><img src="assets/logo.png" alt="AGBLAB AI — студия AI-разработки"></a>
       <div class="nav-links">
+        <a href="#znakomo">Знакомо?</a>
         <a href="#services">Услуги</a>
         <a href="#how">Как работаем</a>
         <a href="#pricing">Цены</a>
         <a href="#contact">Контакты</a>
       </div>
-      <a href="#contact" class="btn">Обсудить проект</a>
+      <a href="#contact" class="btn nav-cta">Обсудить проект</a>
+      <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
     </nav>
   </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#znakomo">Знакомо?</a>
+    <a href="#services">Услуги</a>
+    <a href="#how">Как работаем</a>
+    <a href="#pricing">Цены</a>
+    <a href="#contact">Контакты</a>
+    <a href="#contact" class="btn">Обсудить проект</a>
+  </div>
 </header>
+<button class="to-top" id="toTop" aria-label="Наверх">↑</button>
 
 <section class="hero">
   <div class="glow"></div>
   <div class="wrap">
     <div class="pill"><span class="live"></span>AGBLAB AI® — официальный товарный знак №&nbsp;1225812</div>
-    <h1>AI-агенты, системы<br>и сайты, которые <span class="grad">работают на вас</span></h1>
+    <h1>AI-агенты в системах и сайты, которые <span class="grad">работают на вас</span></h1>
     <p>Студия разработки AGBLAB AI. Превращаем идею в работающий продукт: умные агенты, агентные системы под ключ, сайты и любые решения на стыке бизнеса и нейросетей.</p>
     <div class="hero-cta">
       <a href="#contact" class="btn">Обсудить проект →</a>
@@ -346,7 +380,7 @@ footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-siz
         Написать в Telegram
       </a>
       <a href="https://max.ru/u/f9LHodD0cOLhQWAjFglP8N1INaxE1e-rjPalUZT34ABfUnAEHESSznz1YIo" target="_blank" rel="noopener" class="msg-btn max">
-        <span class="max-ico">M</span>
+        <img class="msg-ico-img" src="assets/max-icon.png" alt="MAX">
         Написать в MAX
       </a>
     </div>
@@ -356,16 +390,7 @@ footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-siz
 
 <footer>
   <div class="wrap foot">
-    <div class="logo">
-      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M50 4 L91 27 V73 L50 96 L9 73 V27 Z" stroke="#ff3b3b" stroke-width="6" fill="rgba(255,59,59,.07)"/>
-        <circle cx="50" cy="38" r="7" fill="#ff3b3b"/>
-        <circle cx="34" cy="62" r="6" fill="#ff7a45"/>
-        <circle cx="66" cy="62" r="6" fill="#ff7a45"/>
-        <path d="M50 45 L34 56 M50 45 L66 56 M34 62 L66 62" stroke="#ff3b3b" stroke-width="4" stroke-linecap="round"/>
-      </svg>
-      AGBLAB<span class="ai">AI</span>
-    </div>
+    <div class="logo"><img src="assets/logo.png" alt="AGBLAB AI"></div>
     <div>AI-агенты · Автоматизация · Сайты</div>
     <div>© 2026 AGBLAB AI® · ТЗ №&nbsp;1225812. Все права защищены.</div>
   </div>
@@ -379,6 +404,34 @@ addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>10));
 // reveal on scroll
 const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%3*0.07)+'s';io.observe(el)});
+
+// бургер-меню
+const burger=document.getElementById('burger'), menu=document.getElementById('mobileMenu');
+burger.addEventListener('click',()=>{burger.classList.toggle('open');menu.classList.toggle('open')});
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{burger.classList.remove('open');menu.classList.remove('open')}));
+
+// кнопка наверх
+const toTop=document.getElementById('toTop');
+toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+addEventListener('scroll',()=>toTop.classList.toggle('show',scrollY>600));
+
+// подсветка активного пункта меню при скролле
+const navMap={};
+document.querySelectorAll('.nav-links a').forEach(a=>{const id=a.getAttribute('href').slice(1);if(id)navMap[id]=a});
+const spy=new IntersectionObserver(es=>es.forEach(e=>{
+  const a=navMap[e.target.id]; if(!a)return;
+  if(e.isIntersecting){Object.values(navMap).forEach(x=>x.classList.remove('active'));a.classList.add('active')}
+}),{rootMargin:'-45% 0px -50% 0px'});
+['znakomo','services','how','pricing','contact'].forEach(id=>{const s=document.getElementById(id);if(s)spy.observe(s)});
+
+// спотлайт за курсором на карточках
+document.querySelectorAll('.card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty('--mx',(e.clientX-r.left)+'px');
+    card.style.setProperty('--my',(e.clientY-r.top)+'px');
+  });
+});
 </script>
 </body>
 </html>

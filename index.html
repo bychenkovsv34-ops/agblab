@@ -106,7 +106,9 @@ section{padding:90px 0}
 .card:hover{border-color:var(--accent);transform:translateY(-4px)}
 .card>*{position:relative}
 .card .ico{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;
-  font-size:26px;background:linear-gradient(135deg,rgba(110,231,168,.18),rgba(59,130,246,.12));margin-bottom:20px}
+  color:var(--accent);background:linear-gradient(135deg,rgba(255,59,59,.16),rgba(255,122,69,.10));
+  border:1px solid rgba(255,59,59,.16);margin-bottom:20px}
+.card .ico svg{width:27px;height:27px}
 .card h3{font-size:21px;margin-bottom:10px;font-weight:700}
 .card p{color:var(--mut);font-size:15.5px}
 
@@ -148,8 +150,10 @@ section{padding:90px 0}
 .ps-row:hover .ps-sol{transform:translateY(-3px)}
 .ps-pain{border-color:rgba(255,59,59,.18)}
 .ps-sol{background:linear-gradient(180deg,rgba(255,59,59,.07),var(--card));border-color:rgba(255,59,59,.32)}
-.ps-ico,.ps-check{font-size:23px;line-height:1;flex-shrink:0;margin-top:1px}
-.ps-check{color:var(--accent);font-weight:800}
+.ps-ico,.ps-check{flex-shrink:0;margin-top:1px;display:flex;align-items:flex-start}
+.ps-ico{color:#ff7a45}
+.ps-check{color:var(--accent)}
+.ps-ico svg,.ps-check svg{width:22px;height:22px}
 .ps-pain b,.ps-sol b{display:block;font-size:12px;letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px}
 .ps-pain b{color:var(--mut)}
 .ps-sol b{color:var(--accent)}
@@ -282,24 +286,24 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
     <p class="sub reveal">Если узнали себя хотя бы в одном — вам сюда.</p>
     <div class="ps-list">
       <div class="ps-row reveal">
-        <div class="ps-pain"><span class="ps-ico">⏰</span><div><b>Болит</b><p>Клиенты пишут в любое время — вы не успеваете отвечать всем.</p></div></div>
+        <div class="ps-pain"><span class="ps-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></svg></span><div><b>Болит</b><p>Клиенты пишут в любое время — вы не успеваете отвечать всем.</p></div></div>
         <div class="ps-arrow">→</div>
-        <div class="ps-sol"><span class="ps-check">✓</span><div><b>Решаем</b><p>AI-агент отвечает мгновенно 24/7 — не упускает ни одного обращения.</p></div></div>
+        <div class="ps-sol"><span class="ps-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Решаем</b><p>AI-агент отвечает мгновенно 24/7 — не упускает ни одного обращения.</p></div></div>
       </div>
       <div class="ps-row reveal">
-        <div class="ps-pain"><span class="ps-ico">🌀</span><div><b>Болит</b><p>Заявки сыплются из Telegram, сайта, почты — часть теряется.</p></div></div>
+        <div class="ps-pain"><span class="ps-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5h17l-6.5 7.5V19l-4 2v-8.5L3.5 5Z"/></svg></span><div><b>Болит</b><p>Заявки сыплются из Telegram, сайта, почты — часть теряется.</p></div></div>
         <div class="ps-arrow">→</div>
-        <div class="ps-sol"><span class="ps-check">✓</span><div><b>Решаем</b><p>Собираем всё в один центр — ни один лид не остынет.</p></div></div>
+        <div class="ps-sol"><span class="ps-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Решаем</b><p>Собираем всё в один центр — ни один лид не остынет.</p></div></div>
       </div>
       <div class="ps-row reveal">
-        <div class="ps-pain"><span class="ps-ico">🔁</span><div><b>Болит</b><p>Рутина — ответы, отчёты, перенос данных — съедает весь день.</p></div></div>
+        <div class="ps-pain"><span class="ps-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.5 20.5 6 17 9.5"/><path d="M3.5 11V9.5a4 4 0 0 1 4-4h13"/><path d="M7 21.5 3.5 18 7 14.5"/><path d="M20.5 13v1.5a4 4 0 0 1-4 4h-13"/></svg></span><div><b>Болит</b><p>Рутина — ответы, отчёты, перенос данных — съедает весь день.</p></div></div>
         <div class="ps-arrow">→</div>
-        <div class="ps-sol"><span class="ps-check">✓</span><div><b>Решаем</b><p>Отдаём рутину роботам — вы занимаетесь ростом.</p></div></div>
+        <div class="ps-sol"><span class="ps-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Решаем</b><p>Отдаём рутину роботам — вы занимаетесь ростом.</p></div></div>
       </div>
       <div class="ps-row reveal">
-        <div class="ps-pain"><span class="ps-ico">🤔</span><div><b>Болит</b><p>Хотите автоматизировать, но не знаете, с чего начать и сколько стоит.</p></div></div>
+        <div class="ps-pain"><span class="ps-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.4a2.5 2.5 0 0 1 4.7 1.1c0 1.7-2.3 2-2.3 3.3"/><circle cx="12" cy="16.4" r=".4" fill="currentColor" stroke="none"/></svg></span><div><b>Болит</b><p>Хотите автоматизировать, но не знаете, с чего начать и сколько стоит.</p></div></div>
         <div class="ps-arrow">→</div>
-        <div class="ps-sol"><span class="ps-check">✓</span><div><b>Решаем</b><p>Бесплатный разбор 30 минут — покажем, что автоматизировать и где утекают деньги.</p></div></div>
+        <div class="ps-sol"><span class="ps-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Решаем</b><p>Бесплатный разбор 30 минут — покажем, что автоматизировать и где утекают деньги.</p></div></div>
       </div>
     </div>
     <div class="ps-cta reveal">
@@ -315,32 +319,32 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
     <p class="sub reveal">Берём вашу задачу и доводим до работающего продукта. Без технических терминов — вы получаете инструмент, который зарабатывает.</p>
     <div class="grid">
       <div class="card reveal">
-        <div class="ico">🤖</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4.5"/><circle cx="12" cy="3.4" r="1.1" fill="currentColor" stroke="none"/><path d="M2.5 12.5v2M21.5 12.5v2"/><circle cx="9" cy="13.5" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="13.5" r="1.2" fill="currentColor" stroke="none"/></svg></div>
         <h3>AI-агенты</h3>
         <p>Умные ассистенты, которые отвечают клиентам, обрабатывают заявки и работают за вас 24/7 — в Telegram, на сайте или внутри вашей системы.</p>
       </div>
       <div class="card reveal">
-        <div class="ico">🧠</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="7" r="2.1"/><circle cx="18" cy="7" r="2.1"/><circle cx="12" cy="17.5" r="2.1"/><path d="M8 7.4h8M7.7 8.7l3 6.9M16.3 8.7l-3 6.9"/></svg></div>
         <h3>Агентные системы (AIOS)</h3>
         <p>Не один бот, а команда агентов под ваш бизнес. Сколько нужно — один агент или целая система. Общаются между собой, делят задачи, ведут процесс от и до. Растёт вместе с вами.</p>
       </div>
       <div class="card reveal">
-        <div class="ico">🌐</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18"/><circle cx="6.2" cy="6.8" r=".55" fill="currentColor" stroke="none"/><circle cx="8.4" cy="6.8" r=".55" fill="currentColor" stroke="none"/><circle cx="10.6" cy="6.8" r=".55" fill="currentColor" stroke="none"/></svg></div>
         <h3>Сайты и лендинги</h3>
         <p>Продающие сайты, которые собирают заявки. Современный дизайн, быстрая загрузка, адаптив под телефон — под ключ за пару дней.</p>
       </div>
       <div class="card reveal">
-        <div class="ico">⚙️</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 13.4-5.9L20 8.5"/><path d="M20 4v4.5h-4.5"/><path d="M20 12a8 8 0 0 1-13.4 5.9L4 15.5"/><path d="M4 20v-4.5h4.5"/></svg></div>
         <h3>Автоматизация</h3>
         <p>Связываем сервисы вашего бизнеса — CRM, маркетплейсы, таблицы, мессенджеры — в одну систему. Рутина уходит роботам, вы занимаетесь ростом.</p>
       </div>
       <div class="card reveal">
-        <div class="ico">📱</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18.5h3"/><path d="M9.5 7.5h5"/></svg></div>
         <h3>Боты и приложения</h3>
         <p>Telegram-боты, мини-приложения и сервисы под вашу задачу — от заявок и оплат до личных кабинетов.</p>
       </div>
       <div class="card reveal">
-        <div class="ico">✨</div>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.2 1.3 5 4.4 5 8.2l-2.3 2.6H9.3L7 11.2C7 7.4 8.8 4.3 12 3Z"/><circle cx="12" cy="9.3" r="1.4"/><path d="M9.3 15.5c-1.4 1-1.8 3.4-1.8 4.5 1.1 0 3.5-.4 4.5-1.8M14.7 15.5c1.4 1 1.8 3.4 1.8 4.5-1.1 0-3.5-.4-4.5-1.8"/></svg></div>
         <h3>Идея → запуск</h3>
         <p>Берём вашу идею или задачу, переводим в чёткую цель и запускаем работающее решение. Даже если такого ещё нет ни у кого — у нас есть структура, чтобы собрать это под любой бизнес.</p>
       </div>

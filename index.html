@@ -185,15 +185,23 @@ section{padding:90px 0}
 .msg-btn.max{background:linear-gradient(135deg,#4f7cf7,#a24bff);box-shadow:0 10px 30px rgba(140,60,240,.3)}
 .msg-ico-img{width:27px;height:27px;border-radius:8px;display:block;flex-shrink:0}
 .msg-note{text-align:center;color:var(--mut);font-size:14px}
+.msg-consent{text-align:center;color:var(--mut);font-size:13px;margin-top:10px}
+.msg-consent a{color:var(--mut);text-decoration:underline;text-underline-offset:2px}
+.msg-consent a:hover{color:var(--accent)}
 .contacts-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:24px 0 8px}
 .contact-link{display:inline-flex;align-items:center;gap:9px;color:var(--txt);font-size:16px;font-weight:600;
   background:var(--card);border:1px solid var(--line);padding:12px 20px;border-radius:12px;transition:.2s}
 .contact-link:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
 .contact-link svg{width:19px;height:19px;flex-shrink:0}
 
-footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-size:14px}
-.foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
-.foot a:hover{color:var(--txt)}
+footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);font-size:14px}
+.foot-main{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;
+  padding-bottom:22px;margin-bottom:22px;border-bottom:1px solid var(--line)}
+.foot-links{display:flex;gap:20px;flex-wrap:wrap}
+.foot-links a{color:var(--mut)}
+.foot-links a:hover{color:var(--accent)}
+.foot-legal{display:flex;flex-direction:column;gap:8px;color:var(--mut);line-height:1.6}
+.foot-legal a:hover{color:var(--txt)}
 
 .reveal{opacity:0;transform:translateY(24px);transition:.7s cubic-bezier(.2,.7,.2,1)}
 .reveal.in{opacity:1;transform:none}
@@ -443,14 +451,25 @@ footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-siz
       </a>
     </div>
     <p class="msg-note reveal">Отвечаем 24/7 · официальный товарный знак AGBLAB AI® №&nbsp;1225812</p>
+    <p class="msg-consent reveal">Нажимая кнопку, вы соглашаетесь с <a href="privacy.html">обработкой персональных данных</a> и <a href="offer.html">условиями оферты</a>.</p>
   </div>
 </section>
 
 <footer>
-  <div class="wrap foot">
-    <div class="logo"><img src="assets/logo.png" alt="AGBLAB AI"></div>
-    <div>AI-агенты · Автоматизация · Сайты</div>
-    <div>© 2026 AGBLAB AI® · ТЗ №&nbsp;1225812. Все права защищены.</div>
+  <div class="wrap">
+    <div class="foot-main">
+      <div class="logo"><img src="assets/logo.png" alt="AGBLAB AI"></div>
+      <div class="foot-links">
+        <a href="privacy.html">Политика конфиденциальности</a>
+        <a href="terms.html">Пользовательское соглашение</a>
+        <a href="offer.html">Публичная оферта</a>
+        <a href="cookies.html">Cookie</a>
+      </div>
+    </div>
+    <div class="foot-legal">
+      <div>ИП Быченков Сергей Владимирович · ИНН 344403876120 · ОГРНИП 323508100092353</div>
+      <div>© 2026 AGBLAB AI® · товарный знак №&nbsp;1225812 · AI-агенты · Автоматизация · Сайты. Все права защищены.</div>
+    </div>
   </div>
 </footer>
 

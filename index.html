@@ -106,6 +106,28 @@ section{padding:90px 0}
 .band h2{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-1px;margin-bottom:16px}
 .band p{color:var(--mut);font-size:18px;max-width:560px;margin:0 auto 32px}
 
+/* боль → решение */
+.ps-list{display:flex;flex-direction:column;gap:16px;max-width:940px;margin:0 auto}
+.ps-row{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch}
+.ps-pain,.ps-sol{display:flex;gap:14px;align-items:flex-start;background:var(--card);
+  border:1px solid var(--line);border-radius:16px;padding:20px 22px;transition:.25s}
+.ps-row:hover .ps-pain{border-color:rgba(255,59,59,.3)}
+.ps-row:hover .ps-sol{transform:translateY(-3px)}
+.ps-pain{border-color:rgba(255,59,59,.18)}
+.ps-sol{background:linear-gradient(180deg,rgba(255,59,59,.07),var(--card));border-color:rgba(255,59,59,.32)}
+.ps-ico,.ps-check{font-size:23px;line-height:1;flex-shrink:0;margin-top:1px}
+.ps-check{color:var(--accent);font-weight:800}
+.ps-pain b,.ps-sol b{display:block;font-size:12px;letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px}
+.ps-pain b{color:var(--mut)}
+.ps-sol b{color:var(--accent)}
+.ps-pain p,.ps-sol p{font-size:15px;color:var(--txt);line-height:1.45}
+.ps-arrow{display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:24px;font-weight:800}
+.ps-cta{text-align:center;margin-top:38px}
+@media(max-width:760px){
+  .ps-row{grid-template-columns:1fr;gap:10px}
+  .ps-arrow{transform:rotate(90deg);font-size:20px}
+}
+
 /* messenger CTA */
 .msg-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
 .msg-btn{display:inline-flex;align-items:center;gap:11px;font-weight:700;font-size:17px;
@@ -170,6 +192,39 @@ footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-siz
   </div>
 </section>
 
+<section id="znakomo" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="eyebrow reveal">Боль → решение</div>
+    <h2 class="h2 reveal">Знакомо?</h2>
+    <p class="sub reveal">Если узнали себя хотя бы в одном — вам сюда.</p>
+    <div class="ps-list">
+      <div class="ps-row reveal">
+        <div class="ps-pain"><span class="ps-ico">⏰</span><div><b>Болит</b><p>Клиенты пишут в любое время — вы не успеваете отвечать всем.</p></div></div>
+        <div class="ps-arrow">→</div>
+        <div class="ps-sol"><span class="ps-check">✓</span><div><b>Решаем</b><p>AI-агент отвечает мгновенно 24/7 — не упускает ни одного обращения.</p></div></div>
+      </div>
+      <div class="ps-row reveal">
+        <div class="ps-pain"><span class="ps-ico">🌀</span><div><b>Болит</b><p>Заявки сыплются из Telegram, сайта, почты — часть теряется.</p></div></div>
+        <div class="ps-arrow">→</div>
+        <div class="ps-sol"><span class="ps-check">✓</span><div><b>Решаем</b><p>Собираем всё в один центр — ни один лид не остынет.</p></div></div>
+      </div>
+      <div class="ps-row reveal">
+        <div class="ps-pain"><span class="ps-ico">🔁</span><div><b>Болит</b><p>Рутина — ответы, отчёты, перенос данных — съедает весь день.</p></div></div>
+        <div class="ps-arrow">→</div>
+        <div class="ps-sol"><span class="ps-check">✓</span><div><b>Решаем</b><p>Отдаём рутину роботам — вы занимаетесь ростом.</p></div></div>
+      </div>
+      <div class="ps-row reveal">
+        <div class="ps-pain"><span class="ps-ico">🤔</span><div><b>Болит</b><p>Хотите автоматизировать, но не знаете, с чего начать и сколько стоит.</p></div></div>
+        <div class="ps-arrow">→</div>
+        <div class="ps-sol"><span class="ps-check">✓</span><div><b>Решаем</b><p>Бесплатный разбор 30 минут — покажем, что автоматизировать и где утекают деньги.</p></div></div>
+      </div>
+    </div>
+    <div class="ps-cta reveal">
+      <a href="#razbor" class="btn">Получить бесплатный разбор</a>
+    </div>
+  </div>
+</section>
+
 <section id="services">
   <div class="wrap">
     <div class="eyebrow reveal">Что мы делаем</div>
@@ -203,8 +258,8 @@ footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-siz
       </div>
       <div class="card reveal">
         <div class="ico">✨</div>
-        <h3>Завайбкодим что угодно</h3>
-        <p>Нестандартная идея? Опишите задачу — соберём решение на нейросетях, даже если такого ещё ни у кого нет.</p>
+        <h3>Идея → запуск</h3>
+        <p>Берём вашу идею или задачу, переводим в чёткую цель и запускаем работающее решение. Даже если такого ещё нет ни у кого — у нас есть структура, чтобы собрать это под любой бизнес.</p>
       </div>
     </div>
   </div>
@@ -272,7 +327,7 @@ footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-siz
   </div>
 </section>
 
-<section>
+<section id="razbor">
   <div class="band reveal">
     <h2>Не уверены, что вам подойдёт?</h2>
     <p>Напишите задачу — бесплатно разберём и предложим, как решить её с помощью AI.</p>

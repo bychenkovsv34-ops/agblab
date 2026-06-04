@@ -161,6 +161,20 @@ section{padding:90px 0}
   .ps-arrow{transform:rotate(90deg);font-size:20px}
 }
 
+/* FAQ-аккордеон */
+.faq-list{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq-item{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .2s}
+.faq-item.open{border-color:rgba(255,59,59,.35)}
+.faq-q{width:100%;text-align:left;background:none;border:0;color:var(--txt);cursor:pointer;
+  font-size:17px;font-weight:600;font-family:inherit;padding:19px 22px;display:flex;
+  align-items:center;justify-content:space-between;gap:16px;transition:.2s}
+.faq-q:hover{color:var(--accent)}
+.faq-ic{flex-shrink:0;width:26px;height:26px;border-radius:8px;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;color:var(--accent);transition:.25s}
+.faq-item.open .faq-ic{transform:rotate(45deg);border-color:var(--accent);background:rgba(255,59,59,.1)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-a p{padding:0 22px 20px;color:var(--mut);font-size:15.5px;line-height:1.55;text-wrap:pretty}
+
 /* messenger CTA */
 .msg-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
 .msg-btn{display:inline-flex;align-items:center;gap:11px;font-weight:700;font-size:17px;
@@ -219,9 +233,10 @@ footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-siz
       <a href="#services" class="btn btn-ghost">Что мы делаем</a>
     </div>
     <div class="trust">
-      <div><b>Под ключ</b>от идеи до запуска</div>
-      <div><b>от 2 дней</b>до первой версии</div>
-      <div><b>24/7</b>работают агенты</div>
+      <div><b class="count" data-to="8">0</b>AI-агентов в системе</div>
+      <div><b class="count" data-to="2">0</b>площадки: TG + MAX</div>
+      <div><b class="count" data-to="1">0</b>товарный знак ®</div>
+      <div><b>24/7</b>на связи</div>
     </div>
   </div>
 </section>
@@ -369,6 +384,35 @@ footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-siz
   </div>
 </section>
 
+<section id="faq" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="eyebrow reveal">FAQ</div>
+    <h2 class="h2 reveal">Частые вопросы</h2>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-q">Сколько это стоит?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><p>Финальную цену считаем под задачу — на сайте указаны ориентиры. Старт всегда с бесплатного разбора.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Я не разбираюсь в ИИ — получится?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><p>Вам и не нужно. Переводим с технического на язык бизнеса: вы получаете готовый инструмент, а не код.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Вдруг не подойдёт?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><p>Начинаем с бесплатного разбора без обязательств, первую версию показываем за пару дней — видите результат ещё до вложений.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Чем вы лучше готовых ботов и конструкторов?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><p>Это ваша собственная система, а не подписка на чужую платформу: свой код, своя база — всё принадлежит вам.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Где хранятся данные?<span class="faq-ic">+</span></button>
+        <div class="faq-a"><p>На российских серверах, под вашим контролем.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="contact">
   <div class="wrap">
     <div class="eyebrow reveal">Контакты</div>
@@ -430,6 +474,25 @@ document.querySelectorAll('.card').forEach(card=>{
     const r=card.getBoundingClientRect();
     card.style.setProperty('--mx',(e.clientX-r.left)+'px');
     card.style.setProperty('--my',(e.clientY-r.top)+'px');
+  });
+});
+
+// счётчики (набегание чисел) — запуск при появлении
+const countIO=new IntersectionObserver((es,obs)=>es.forEach(e=>{
+  if(!e.isIntersecting)return;
+  const el=e.target, to=+el.dataset.to; let cur=0;
+  const step=Math.max(1,Math.round(to/24));
+  const t=setInterval(()=>{cur+=step;if(cur>=to){cur=to;clearInterval(t)}el.textContent=cur},32);
+  obs.unobserve(el);
+}),{threshold:.6});
+document.querySelectorAll('.count').forEach(el=>countIO.observe(el));
+
+// FAQ-аккордеон (открыт один за раз)
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item=q.parentElement, a=item.querySelector('.faq-a'), open=item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i=>{i.classList.remove('open');i.querySelector('.faq-a').style.maxHeight=null});
+    if(!open){item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px'}
   });
 });
 </script>

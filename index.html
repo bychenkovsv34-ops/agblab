@@ -203,9 +203,27 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
 .foot-legal{display:flex;flex-direction:column;gap:8px;color:var(--mut);line-height:1.6}
 .foot-legal a:hover{color:var(--txt)}
 
+.cookie-bar{position:fixed;left:16px;right:16px;bottom:16px;z-index:60;max-width:680px;margin:0 auto;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 20px;
+  box-shadow:0 14px 40px rgba(0,0,0,.45);transform:translateY(160%);transition:.4s ease;opacity:0;pointer-events:none}
+.cookie-bar.show{transform:none;opacity:1;pointer-events:auto}
+.cookie-bar span{color:var(--mut);font-size:13.5px;line-height:1.45;flex:1;min-width:200px}
+.cookie-bar a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.cookie-ok{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:11px 22px;
+  font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;transition:.2s}
+.cookie-ok:hover{transform:translateY(-2px);box-shadow:0 8px 20px var(--glow)}
+
 .reveal{opacity:0;transform:translateY(24px);transition:.7s cubic-bezier(.2,.7,.2,1)}
 .reveal.in{opacity:1;transform:none}
 </style>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
+   ym(109649413,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/109649413" style="position:absolute;left:-9999px;" alt=""/></div></noscript>
+<!-- /Yandex.Metrika counter -->
 </head>
 <body>
 
@@ -234,6 +252,10 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
   </div>
 </header>
 <button class="to-top" id="toTop" aria-label="Наверх">↑</button>
+<div class="cookie-bar" id="cookieBar">
+  <span>Мы используем cookie и Яндекс.Метрику, чтобы сайт работал лучше. Продолжая пользоваться сайтом, вы соглашаетесь с <a href="cookies.html">использованием cookie</a> и <a href="privacy.html">политикой</a>.</span>
+  <button class="cookie-ok" id="cookieOk">Принять</button>
+</div>
 
 <section class="hero">
   <div class="glow"></div>
@@ -431,11 +453,11 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
     <h2 class="h2 reveal">Оставьте заявку</h2>
     <p class="sub reveal">Напишите нам в мессенджер — наш AI-агент мгновенно ответит, уточнит задачу и передаст её нам. Без ожидания и форм.</p>
     <div class="msg-cta reveal">
-      <a href="https://t.me/agbagent_bot?start=site" target="_blank" rel="noopener" class="msg-btn tg">
+      <a href="https://t.me/agbagent_bot?start=site" target="_blank" rel="noopener" class="msg-btn tg" onclick="if(window.ym)ym(109649413,'reachGoal','lead_tg')">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.07-3.01-1.95 1.9c-.22.21-.4.39-.78.39z"/></svg>
         Написать в Telegram
       </a>
-      <a href="https://max.ru/u/f9LHodD0cOLhQWAjFglP8N1INaxE1e-rjPalUZT34ABfUnAEHESSznz1YIo" target="_blank" rel="noopener" class="msg-btn max">
+      <a href="https://max.ru/u/f9LHodD0cOLhQWAjFglP8N1INaxE1e-rjPalUZT34ABfUnAEHESSznz1YIo" target="_blank" rel="noopener" class="msg-btn max" onclick="if(window.ym)ym(109649413,'reachGoal','lead_max')">
         <img class="msg-ico-img" src="assets/max-icon.png" alt="MAX">
         Написать в MAX
       </a>
@@ -509,6 +531,16 @@ document.querySelectorAll('.card').forEach(card=>{
     card.style.setProperty('--my',(e.clientY-r.top)+'px');
   });
 });
+
+// cookie-баннер
+(function(){
+  const bar=document.getElementById('cookieBar');
+  if(!bar)return;
+  if(!localStorage.getItem('cookieok')){setTimeout(()=>bar.classList.add('show'),800)}
+  document.getElementById('cookieOk').addEventListener('click',()=>{
+    localStorage.setItem('cookieok','1');bar.classList.remove('show');
+  });
+})();
 
 // счётчики (набегание чисел) — запуск при появлении
 const countIO=new IntersectionObserver((es,obs)=>es.forEach(e=>{

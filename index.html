@@ -185,6 +185,11 @@ section{padding:90px 0}
 .msg-btn.max{background:linear-gradient(135deg,#4f7cf7,#a24bff);box-shadow:0 10px 30px rgba(140,60,240,.3)}
 .msg-ico-img{width:27px;height:27px;border-radius:8px;display:block;flex-shrink:0}
 .msg-note{text-align:center;color:var(--mut);font-size:14px}
+.contacts-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:24px 0 8px}
+.contact-link{display:inline-flex;align-items:center;gap:9px;color:var(--txt);font-size:16px;font-weight:600;
+  background:var(--card);border:1px solid var(--line);padding:12px 20px;border-radius:12px;transition:.2s}
+.contact-link:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.contact-link svg{width:19px;height:19px;flex-shrink:0}
 
 footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-size:14px}
 .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
@@ -425,6 +430,16 @@ footer{border-top:1px solid var(--line);padding:46px 0;color:var(--mut);font-siz
       <a href="https://max.ru/u/f9LHodD0cOLhQWAjFglP8N1INaxE1e-rjPalUZT34ABfUnAEHESSznz1YIo" target="_blank" rel="noopener" class="msg-btn max">
         <img class="msg-ico-img" src="assets/max-icon.png" alt="MAX">
         Написать в MAX
+      </a>
+    </div>
+    <div class="contacts-row reveal">
+      <a href="tel:+79017475277" class="contact-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>
+        +7 (901) 747-52-77
+      </a>
+      <a href="mailto:agblab.ai@yandex.ru" class="contact-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        agblab.ai@yandex.ru
       </a>
     </div>
     <p class="msg-note reveal">Отвечаем 24/7 · официальный товарный знак AGBLAB AI® №&nbsp;1225812</p>

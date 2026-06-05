@@ -349,10 +349,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
       <img class="chat-ava" src="assets/badge.png" alt="AGBLAB AI">
       <div><b>AI-консультант</b><i>AGBLAB AI · отвечает за секунды</i></div>
     </div>
-    <div class="chat-head-r">
-      <button class="chat-icnbtn" id="chatTts" aria-label="Озвучка ответов" title="Озвучка ответов">🔊</button>
-      <button class="chat-close" id="chatClose" aria-label="Закрыть">✕</button>
-    </div>
+    <button class="chat-close" id="chatClose" aria-label="Закрыть">✕</button>
   </div>
   <div class="chat-body" id="chatBody"></div>
   <form class="chat-input" id="chatForm">
@@ -786,34 +783,18 @@ document.querySelectorAll('.card').forEach(card=>{
   const fab=document.getElementById('chatFab'), win=document.getElementById('chatWin'),
         body=document.getElementById('chatBody'), form=document.getElementById('chatForm'),
         input=document.getElementById('chatText'), closeb=document.getElementById('chatClose'),
-        ttsBtn=document.getElementById('chatTts'), micBtn=document.getElementById('chatMic');
+        micBtn=document.getElementById('chatMic');
   if(!fab)return;
-  const API='https://agblabai.ru/api/chat', STT='https://agblabai.ru/api/stt', TTS_API='https://agblabai.ru/api/tts';
-  const GREET='Здравствуйте! 👋 Я AI-консультант AGBLAB AI. Расскажите, какую задачу хотите решить — подскажу, как её закрыть, и предложу бесплатный разбор.';
-  let history=[], busy=false, greeted=false, tts=false, curAudio=null;
+  const API='https://agblabai.ru/api/chat', STT='https://agblabai.ru/api/stt';
+  const GREET='Здравствуйте! 👋 Меня зовут Ксения, я консультант AGBLAB AI. Расскажите, что хотите наладить в бизнесе — подскажу и предложу бесплатный разбор вашей задачи.';
+  let history=[], busy=false, greeted=false;
   const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
   const linkify=s=>esc(s).replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
   function add(role,text){const d=document.createElement('div');d.className='msg '+(role==='me'?'me':'bot');d.innerHTML=linkify(text);body.appendChild(d);body.scrollTop=body.scrollHeight;}
   function typing(on){let t=document.getElementById('chatTyping');if(on){if(t)return;t=document.createElement('div');t.id='chatTyping';t.className='chat-typing';t.innerHTML='<span></span><span></span><span></span>';body.appendChild(t);body.scrollTop=body.scrollHeight;}else if(t){t.remove();}}
 
-  // озвучка (TTS, Silero на сервере) — по умолчанию ВЫКЛ, включается вручную
-  ttsBtn.textContent='🔇'; ttsBtn.classList.add('off'); ttsBtn.title='Озвучка выключена — нажмите, чтобы включить';
-  function stopAudio(){if(curAudio){try{curAudio.pause();}catch(e){}curAudio=null;}}
-  async function speak(text){
-    if(!tts)return;
-    const clean=text.replace(/https?:\/\/[^\s]+/g,'').replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}]/gu,'').trim();
-    if(!clean)return;
-    try{
-      const r=await fetch(TTS_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:clean})});
-      if(!r.ok)return;
-      const blob=await r.blob(); if(!tts)return; stopAudio();
-      curAudio=new Audio(URL.createObjectURL(blob)); curAudio.play().catch(()=>{});
-    }catch(e){}
-  }
-  ttsBtn.addEventListener('click',()=>{tts=!tts;ttsBtn.textContent=tts?'🔊':'🔇';ttsBtn.classList.toggle('off',!tts);ttsBtn.title=tts?'Озвучка включена':'Озвучка выключена — нажмите, чтобы включить';if(!tts)stopAudio();});
-
-  function open(){win.classList.add('open');fab.classList.add('hide');if(!greeted){greeted=true;add('bot',GREET);speak(GREET);}setTimeout(()=>input.focus(),200);if(window.ym)ym(109649413,'reachGoal','chat_open');}
-  function close(){win.classList.remove('open');fab.classList.remove('hide');stopAudio();}
+  function open(){win.classList.add('open');fab.classList.add('hide');if(!greeted){greeted=true;add('bot',GREET);}setTimeout(()=>input.focus(),200);if(window.ym)ym(109649413,'reachGoal','chat_open');}
+  function close(){win.classList.remove('open');fab.classList.remove('hide');}
   fab.addEventListener('click',open);closeb.addEventListener('click',close);
 
   async function send(text){
@@ -821,7 +802,7 @@ document.querySelectorAll('.card').forEach(card=>{
     try{
       const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})});
       const data=await r.json();typing(false);
-      const reply=data.reply||'Расскажите подробнее о задаче?';add('bot',reply);history.push({role:'assistant',content:reply});speak(reply);
+      const reply=data.reply||'Расскажите подробнее о задаче?';add('bot',reply);history.push({role:'assistant',content:reply});
       if(data.lead&&window.ym)ym(109649413,'reachGoal','chat_lead');
     }catch(err){typing(false);add('bot','Связь прервалась. Напишите нам в Telegram: https://t.me/agbagent_bot');}
     busy=false;

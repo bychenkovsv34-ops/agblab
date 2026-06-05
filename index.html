@@ -76,7 +76,9 @@ nav{display:flex;align-items:center;justify-content:space-between;height:68px}
 .hero{position:relative;padding:160px 0 90px;text-align:center;overflow:hidden}
 .hero .glow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);
   width:900px;height:600px;background:radial-gradient(circle,var(--glow),transparent 60%);
-  filter:blur(40px);opacity:.5;pointer-events:none}
+  filter:blur(40px);opacity:.5;pointer-events:none;z-index:0}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.55}
+.hero .wrap{position:relative;z-index:2}
 .pill{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--accent);
   border:1px solid var(--line);background:var(--bg2);padding:8px 16px;border-radius:100px;margin-bottom:28px}
 .pill .live{width:8px;height:8px;border-radius:50%;background:var(--accent);
@@ -164,6 +166,32 @@ section{padding:90px 0}
   .ps-row{grid-template-columns:1fr;gap:10px}
   .ps-arrow{transform:rotate(90deg);font-size:20px}
 }
+
+/* калькулятор выгоды */
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:980px;margin:0 auto;align-items:stretch}
+.calc-inputs,.calc-results{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px}
+.calc-row{margin-bottom:26px}
+.calc-row:last-child{margin-bottom:0}
+.calc-row label{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15.5px;margin-bottom:13px}
+.calc-row label b{color:var(--accent);font-weight:800;font-size:17px;white-space:nowrap}
+.calc-row small{display:block;color:var(--mut);font-size:13px;margin-top:9px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;
+  background:linear-gradient(90deg,var(--accent) var(--p,30%),#2a2e3a var(--p,30%));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;
+  background:var(--accent);border:3px solid rgba(255,255,255,.85);box-shadow:0 4px 12px var(--glow);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--accent);
+  border:3px solid rgba(255,255,255,.85);box-shadow:0 4px 12px var(--glow);cursor:pointer}
+.calc-results{display:flex;flex-direction:column}
+.calc-res-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:16px}
+.cres{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:17px}
+.cres.feat{border-color:var(--accent);background:linear-gradient(180deg,rgba(255,59,59,.09),var(--bg2))}
+.cres b{display:block;font-size:25px;font-weight:800;color:var(--txt);line-height:1.1;margin-bottom:5px;letter-spacing:-.5px}
+.cres.feat b{color:var(--accent)}
+.cres span{color:var(--mut);font-size:13px;line-height:1.35}
+.calc-note{color:var(--mut);font-size:12.5px;line-height:1.5;margin:2px 0 18px}
+.calc-results .btn{margin-top:auto;width:100%;justify-content:center}
+@media(max-width:820px){.calc{grid-template-columns:1fr}}
+@media(max-width:430px){.calc-res-grid{grid-template-columns:1fr}}
 
 /* FAQ-аккордеон */
 .faq-list{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
@@ -263,6 +291,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
 
 <section class="hero">
   <div class="glow"></div>
+  <canvas id="heroCanvas" class="hero-canvas"></canvas>
   <div class="wrap">
     <div class="pill"><span class="live"></span>AGBLAB AI® — официальный товарный знак №&nbsp;1225812</div>
     <h1>AI-агенты в системах и сайты, которые <span class="grad">работают на вас</span></h1>
@@ -362,6 +391,43 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
       <div class="step reveal"><div class="num">02</div><h4>Прототип</h4><p>Быстро собираем первую рабочую версию, чтобы вы увидели направление.</p></div>
       <div class="step reveal"><div class="num">03</div><h4>Доработка</h4><p>Шлифуем под вас: дизайн, тексты, логика, интеграции с вашими сервисами.</p></div>
       <div class="step reveal"><div class="num">04</div><h4>Запуск</h4><p>Публикуем, подключаем к вашим каналам и передаём инструкцию.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="calc" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="eyebrow reveal">Калькулятор выгоды</div>
+    <h2 class="h2 reveal">Посчитайте свою выгоду</h2>
+    <p class="sub reveal">Подвигайте ползунки — увидите, сколько времени и денег освобождает автоматизация именно в вашем случае.</p>
+    <div class="calc reveal">
+      <div class="calc-inputs">
+        <div class="calc-row">
+          <label>Часов в неделю на рутину <b><span id="cv-hours">10</span> ч</b></label>
+          <input type="range" id="c-hours" min="1" max="60" value="10">
+          <small>Ответы клиентам, отчёты, перенос данных</small>
+        </div>
+        <div class="calc-row">
+          <label>Ставка за час работы <b><span id="cv-rate">800</span> ₽</b></label>
+          <input type="range" id="c-rate" min="300" max="3000" step="50" value="800">
+          <small>Во сколько обходится час сотрудника</small>
+        </div>
+        <div class="calc-row">
+          <label>Сколько человек этим заняты <b><span id="cv-people">2</span></b></label>
+          <input type="range" id="c-people" min="1" max="10" value="2">
+          <small>Команда, которая тратит на это время</small>
+        </div>
+      </div>
+      <div class="calc-results">
+        <div class="calc-res-grid">
+          <div class="cres"><b id="r-hours">0</b><span>часов/мес освобождается</span></div>
+          <div class="cres"><b id="r-month">0&nbsp;₽</b><span>экономия в месяц</span></div>
+          <div class="cres feat"><b id="r-year">0&nbsp;₽</b><span>экономия в год</span></div>
+          <div class="cres"><b id="r-fte">0</b><span>≈ столько сотрудников освобождается</span></div>
+        </div>
+        <p class="calc-note">Как считаем: часы × 4,33 нед × люди × 70% (реально автоматизируемая часть) × ставка. Это ориентир при типичных показателях, не гарантия результата.</p>
+        <a href="#contact" class="btn" onclick="if(window.ym)ym(109649413,'reachGoal','calc_cta')">Получить точный расчёт под мой бизнес →</a>
+      </div>
     </div>
   </div>
 </section>
@@ -544,6 +610,64 @@ document.querySelectorAll('.card').forEach(card=>{
   document.getElementById('cookieOk').addEventListener('click',()=>{
     localStorage.setItem('cookieok','1');bar.classList.remove('show');
   });
+})();
+
+// калькулятор выгоды
+(function(){
+  const h=document.getElementById('c-hours'), r=document.getElementById('c-rate'), p=document.getElementById('c-people');
+  if(!h)return;
+  const fmt=n=>Math.round(n).toLocaleString('ru-RU');
+  const setFill=el=>{const pct=(el.value-el.min)/(el.max-el.min)*100;el.style.setProperty('--p',pct+'%')};
+  function calc(){
+    const hours=+h.value, rate=+r.value, people=+p.value;
+    document.getElementById('cv-hours').textContent=hours;
+    document.getElementById('cv-rate').textContent=fmt(rate);
+    document.getElementById('cv-people').textContent=people;
+    [h,r,p].forEach(setFill);
+    const hm=Math.round(hours*4.33*people*0.7);      // автоматизируемые часы/мес
+    const month=hm*rate, year=month*12, fte=hm/160;
+    document.getElementById('r-hours').textContent=fmt(hm);
+    document.getElementById('r-month').textContent=fmt(month)+' ₽';
+    document.getElementById('r-year').textContent=fmt(year)+' ₽';
+    document.getElementById('r-fte').textContent=fte.toFixed(1).replace('.',',');
+  }
+  [h,r,p].forEach(el=>el.addEventListener('input',calc));
+  calc();
+})();
+
+// интерактивный фон hero (сеть точек, реагирует на курсор)
+(function(){
+  const c=document.getElementById('heroCanvas'); if(!c)return;
+  const reduce=window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ctx=c.getContext('2d');
+  let W,H,nodes,raf; const mouse={x:-9999,y:-9999,on:false};
+  const C1={r:255,g:59,b:59}, C2={r:255,g:122,b:69}, MAXD=140, MOUSED=170;
+  const num=()=>innerWidth<700?22:46;
+  const mix=t=>Math.round(C1.r+(C2.r-C1.r)*t)+','+Math.round(C1.g+(C2.g-C1.g)*t)+','+Math.round(C1.b+(C2.b-C1.b)*t);
+  function resize(){const b=c.getBoundingClientRect();W=c.width=b.width;H=c.height=b.height;}
+  function mk(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,t:Math.random()};}
+  function init(){resize();nodes=Array.from({length:num()},mk);}
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<nodes.length;i++){
+      const a=nodes[i];
+      for(let j=i+1;j<nodes.length;j++){
+        const b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+        if(d<MAXD){ctx.strokeStyle='rgba('+mix((a.t+b.t)/2)+','+((1-d/MAXD)*.18).toFixed(3)+')';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+      }
+      if(mouse.on){const dx=a.x-mouse.x,dy=a.y-mouse.y,d=Math.hypot(dx,dy);
+        if(d<MOUSED){ctx.strokeStyle='rgba('+mix(a.t)+','+((1-d/MOUSED)*.34).toFixed(3)+')';ctx.lineWidth=.9;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(mouse.x,mouse.y);ctx.stroke();a.vx+=(dx<0?.0025:-.0025);a.vy+=(dy<0?.0025:-.0025);}}
+    }
+    for(const n of nodes){ctx.fillStyle='rgba('+mix(n.t)+',.6)';ctx.beginPath();ctx.arc(n.x,n.y,1.7,0,6.2832);ctx.fill();
+      n.x+=n.vx;n.y+=n.vy;n.vx*=.998;n.vy*=.998;
+      if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;}
+    if(!reduce)raf=requestAnimationFrame(frame);
+  }
+  init();frame();
+  addEventListener('resize',()=>{cancelAnimationFrame(raf);init();frame();});
+  const hero=c.parentElement;
+  hero.addEventListener('mousemove',e=>{const b=c.getBoundingClientRect();mouse.x=e.clientX-b.left;mouse.y=e.clientY-b.top;mouse.on=true;});
+  hero.addEventListener('mouseleave',()=>{mouse.on=false;mouse.x=mouse.y=-9999;});
 })();
 
 // счётчики (набегание чисел) — запуск при появлении

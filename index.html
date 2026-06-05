@@ -282,6 +282,14 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
 .chat-input input:focus{border-color:var(--accent)}
 .chat-input button{background:var(--accent);color:#fff;border:0;border-radius:12px;width:46px;font-size:17px;cursor:pointer;flex-shrink:0}
 .chat-input button:disabled{opacity:.5;cursor:default}
+.chat-head-r{display:flex;align-items:center;gap:2px}
+.chat-icnbtn{background:none;border:0;color:var(--mut);font-size:16px;cursor:pointer;padding:5px 8px;border-radius:8px;line-height:1}
+.chat-icnbtn:hover{background:var(--bg2)}
+.chat-icnbtn.off{opacity:.5}
+.chat-input button.chat-mic{background:var(--bg2);color:var(--txt);border:1px solid var(--line)}
+.chat-input button.chat-mic:hover{border-color:var(--accent)}
+.chat-input button.chat-mic.rec{background:var(--accent);color:#fff;border-color:var(--accent);animation:micpulse 1s infinite}
+@keyframes micpulse{0%,100%{box-shadow:0 0 0 0 var(--glow)}50%{box-shadow:0 0 0 7px transparent}}
 @media(max-width:520px){
   .chat-win{left:8px;right:8px;bottom:8px;width:auto;height:calc(100dvh - 16px);max-height:none}
   .chat-fab{left:14px;bottom:84px}
@@ -341,10 +349,14 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
       <img class="chat-ava" src="assets/badge.png" alt="AGBLAB AI">
       <div><b>AI-консультант</b><i>AGBLAB AI · отвечает за секунды</i></div>
     </div>
-    <button class="chat-close" id="chatClose" aria-label="Закрыть">✕</button>
+    <div class="chat-head-r">
+      <button class="chat-icnbtn" id="chatTts" aria-label="Озвучка ответов" title="Озвучка ответов">🔊</button>
+      <button class="chat-close" id="chatClose" aria-label="Закрыть">✕</button>
+    </div>
   </div>
   <div class="chat-body" id="chatBody"></div>
   <form class="chat-input" id="chatForm">
+    <button type="button" class="chat-mic" id="chatMic" aria-label="Сказать голосом" title="Сказать голосом">🎤</button>
     <input id="chatText" placeholder="Опишите задачу…" autocomplete="off" maxlength="1000">
     <button type="submit" aria-label="Отправить">➤</button>
   </form>
@@ -766,33 +778,76 @@ document.querySelectorAll('.card').forEach(card=>{
   hero.addEventListener('mouseleave',()=>{mouse.on=false;mouse.x=mouse.y=-9999;});
 })();
 
-// AI-консультант (агент-продавец)
+// AI-консультант (агент-продавец) + голос
 (function(){
   const fab=document.getElementById('chatFab'), win=document.getElementById('chatWin'),
         body=document.getElementById('chatBody'), form=document.getElementById('chatForm'),
-        input=document.getElementById('chatText'), closeb=document.getElementById('chatClose');
+        input=document.getElementById('chatText'), closeb=document.getElementById('chatClose'),
+        ttsBtn=document.getElementById('chatTts'), micBtn=document.getElementById('chatMic');
   if(!fab)return;
-  const API='https://agblabai.ru/api/chat';
+  const API='https://agblabai.ru/api/chat', STT='https://agblabai.ru/api/stt';
   const GREET='Здравствуйте! 👋 Я AI-консультант AGBLAB AI. Расскажите, какую задачу хотите решить — подскажу, как её закрыть, и предложу бесплатный разбор.';
-  let history=[], busy=false, greeted=false;
+  let history=[], busy=false, greeted=false, tts=true, ruVoice=null;
   const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
   const linkify=s=>esc(s).replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
   function add(role,text){const d=document.createElement('div');d.className='msg '+(role==='me'?'me':'bot');d.innerHTML=linkify(text);body.appendChild(d);body.scrollTop=body.scrollHeight;}
   function typing(on){let t=document.getElementById('chatTyping');if(on){if(t)return;t=document.createElement('div');t.id='chatTyping';t.className='chat-typing';t.innerHTML='<span></span><span></span><span></span>';body.appendChild(t);body.scrollTop=body.scrollHeight;}else if(t){t.remove();}}
-  function open(){win.classList.add('open');fab.classList.add('hide');if(!greeted){greeted=true;add('bot',GREET);}setTimeout(()=>input.focus(),200);if(window.ym)ym(109649413,'reachGoal','chat_open');}
-  function close(){win.classList.remove('open');fab.classList.remove('hide');}
+
+  // озвучка (TTS)
+  function pickVoice(){const vs=speechSynthesis.getVoices();ruVoice=vs.find(v=>/ru[-_]?RU/i.test(v.lang))||vs.find(v=>/^ru/i.test(v.lang))||null;}
+  if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+  function speak(text){
+    if(!tts||!('speechSynthesis' in window))return;
+    const clean=text.replace(/https?:\/\/[^\s]+/g,'').replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}]/gu,'').trim();
+    if(!clean)return;
+    try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(clean);u.lang='ru-RU';if(ruVoice)u.voice=ruVoice;u.rate=1.04;speechSynthesis.speak(u);}catch(e){}
+  }
+  ttsBtn.addEventListener('click',()=>{tts=!tts;ttsBtn.textContent=tts?'🔊':'🔇';ttsBtn.classList.toggle('off',!tts);if(!tts){try{speechSynthesis.cancel();}catch(e){}}});
+
+  function open(){win.classList.add('open');fab.classList.add('hide');if(!greeted){greeted=true;add('bot',GREET);speak(GREET);}setTimeout(()=>input.focus(),200);if(window.ym)ym(109649413,'reachGoal','chat_open');}
+  function close(){win.classList.remove('open');fab.classList.remove('hide');try{speechSynthesis.cancel();}catch(e){}}
   fab.addEventListener('click',open);closeb.addEventListener('click',close);
-  form.addEventListener('submit',async e=>{
-    e.preventDefault();const text=input.value.trim();if(!text||busy)return;
-    input.value='';add('me',text);history.push({role:'user',content:text});busy=true;typing(true);
+
+  async function send(text){
+    add('me',text);history.push({role:'user',content:text});busy=true;typing(true);
     try{
       const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})});
       const data=await r.json();typing(false);
-      const reply=data.reply||'Расскажите подробнее о задаче?';add('bot',reply);history.push({role:'assistant',content:reply});
+      const reply=data.reply||'Расскажите подробнее о задаче?';add('bot',reply);history.push({role:'assistant',content:reply});speak(reply);
       if(data.lead&&window.ym)ym(109649413,'reachGoal','chat_lead');
     }catch(err){typing(false);add('bot','Связь прервалась. Напишите нам в Telegram: https://t.me/agbagent_bot');}
     busy=false;
-  });
+  }
+  form.addEventListener('submit',e=>{e.preventDefault();const t=input.value.trim();if(!t||busy)return;input.value='';send(t);});
+
+  // голосовой ввод (STT через Deepgram)
+  let rec=null, chunks=[], recording=false;
+  async function startRec(){
+    if(busy)return;
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      const mime=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg'].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m))||'';
+      rec=new MediaRecorder(stream, mime?{mimeType:mime}:undefined); chunks=[];
+      rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+      rec.onstop=async()=>{
+        stream.getTracks().forEach(t=>t.stop());
+        const blob=new Blob(chunks,{type:rec.mimeType||'audio/webm'});
+        micBtn.classList.remove('rec');micBtn.textContent='🎤';
+        if(blob.size<800)return;
+        typing(true);
+        try{
+          const r=await fetch(STT,{method:'POST',headers:{'Content-Type':blob.type},body:blob});
+          const data=await r.json();typing(false);
+          const text=(data.text||'').trim();
+          if(text){input.value=text;send(text);}
+          else{add('bot','Не расслышал 🙈 Повторите голосом или напишите текстом.');}
+        }catch(e){typing(false);add('bot','Не получилось распознать. Напишите текстом, пожалуйста.');}
+      };
+      rec.start();recording=true;micBtn.classList.add('rec');micBtn.textContent='⏹';
+    }catch(e){add('bot','Не вижу микрофон 🎤 Разрешите доступ в браузере или напишите текстом.');}
+  }
+  function stopRec(){if(rec&&recording){recording=false;try{rec.stop();}catch(e){}}}
+  micBtn.addEventListener('click',()=>{recording?stopRec():startRec();});
 })();
 
 // счётчики (набегание чисел) — запуск при появлении

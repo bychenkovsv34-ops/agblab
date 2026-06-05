@@ -22,6 +22,7 @@ ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
 TELEGRAM_TOKEN    = os.environ.get("TELEGRAM_TOKEN", "")
 OWNER_ID          = os.environ.get("OWNER_TELEGRAM_ID", "")
 MODEL             = os.environ.get("SALES_MODEL", "claude-haiku-4-5-20251001")
+DEEPGRAM_API_KEY  = os.environ.get("DEEPGRAM_API_KEY", "")
 
 ALLOWED_ORIGINS = [
     "https://agblabai.ru", "https://www.agblabai.ru",
@@ -35,6 +36,7 @@ MAX_TOKENS       = 400      # потолок ответа
 RL_PER_MIN       = 6        # сообщений в минуту с одного IP
 RL_PER_DAY       = 50       # сообщений в день с одного IP
 GLOBAL_DAY_CAP   = 1500     # суммарный дневной потолок по всем (страховка)
+MAX_AUDIO        = 2_500_000  # ~2.5 МБ на голосовое сообщение
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
@@ -195,3 +197,28 @@ async def chat(body: ChatIn, request: Request):
         send_lead_to_tg(lead, check_repeat(lead))
 
     return JSONResponse({"reply": reply or "Расскажите подробнее о задаче?", "lead": bool(lead)})
+
+@app.post("/api/stt")
+async def stt(request: Request):
+    """Голос → текст через Deepgram. Принимает сырые аудио-байты (audio/webm и т.п.)."""
+    ip = request.headers.get("x-forwarded-for", request.client.host).split(",")[0].strip()
+    if not rate_ok(ip):
+        return JSONResponse({"text": "", "error": "rate"})
+    if not DEEPGRAM_API_KEY:
+        return JSONResponse({"text": "", "error": "no_key"})
+    audio = await request.body()
+    if not audio or len(audio) > MAX_AUDIO:
+        return JSONResponse({"text": "", "error": "size"})
+    ctype = request.headers.get("content-type", "audio/webm")
+    try:
+        r = httpx.post(
+            "https://api.deepgram.com/v1/listen",
+            params={"model": "nova-2", "language": "ru", "smart_format": "true"},
+            headers={"Authorization": f"Token {DEEPGRAM_API_KEY}", "Content-Type": ctype},
+            content=audio, timeout=30,
+        )
+        text = r.json()["results"]["channels"][0]["alternatives"][0]["transcript"]
+    except Exception as e:
+        log.warning("stt error: %s", e)
+        text = ""
+    return JSONResponse({"text": text})

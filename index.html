@@ -246,6 +246,47 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
   font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;transition:.2s}
 .cookie-ok:hover{transform:translateY(-2px);box-shadow:0 8px 20px var(--glow)}
 
+/* AI-продавец виджет */
+.chat-fab{position:fixed;left:20px;bottom:20px;z-index:70;display:inline-flex;align-items:center;gap:9px;
+  background:var(--accent);color:#fff;border:none;border-radius:100px;padding:13px 20px 13px 16px;font-weight:700;
+  font-size:15px;font-family:inherit;cursor:pointer;box-shadow:0 12px 30px var(--glow);transition:.2s}
+.chat-fab:hover{transform:translateY(-2px)}
+.chat-fab svg{width:22px;height:22px}
+.chat-fab.hide{opacity:0;pointer-events:none;transform:scale(.8)}
+.chat-win{position:fixed;left:20px;bottom:20px;z-index:71;width:380px;max-width:calc(100vw - 32px);height:560px;
+  max-height:calc(100vh - 40px);background:var(--card);border:1px solid var(--line);border-radius:20px;
+  display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.55);
+  opacity:0;pointer-events:none;transform:translateY(20px) scale(.98);transition:.25s}
+.chat-win.open{opacity:1;pointer-events:auto;transform:none}
+.chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;
+  border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(255,59,59,.08),transparent)}
+.chat-head-l{display:flex;align-items:center;gap:11px}
+.chat-ava{width:38px;height:38px;border-radius:10px;flex-shrink:0}
+.chat-head b{font-size:15px;display:block}
+.chat-head i{font-size:12px;color:var(--mut);font-style:normal}
+.chat-close{background:none;border:0;color:var(--mut);font-size:20px;cursor:pointer;padding:4px 9px;border-radius:8px;line-height:1}
+.chat-close:hover{color:var(--txt);background:var(--bg2)}
+.chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px}
+.msg{max-width:86%;padding:11px 14px;border-radius:14px;font-size:14.5px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
+.msg.bot{align-self:flex-start;background:var(--bg2);border:1px solid var(--line);border-bottom-left-radius:5px}
+.msg.me{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:5px}
+.msg a{color:inherit;text-decoration:underline}
+.chat-typing{align-self:flex-start;display:flex;gap:4px;padding:12px 14px}
+.chat-typing span{width:7px;height:7px;border-radius:50%;background:var(--mut);animation:typ 1.2s infinite}
+.chat-typing span:nth-child(2){animation-delay:.2s}.chat-typing span:nth-child(3){animation-delay:.4s}
+@keyframes typ{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+.chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.chat-input input{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+  color:var(--txt);font-size:14.5px;font-family:inherit;outline:none}
+.chat-input input:focus{border-color:var(--accent)}
+.chat-input button{background:var(--accent);color:#fff;border:0;border-radius:12px;width:46px;font-size:17px;cursor:pointer;flex-shrink:0}
+.chat-input button:disabled{opacity:.5;cursor:default}
+@media(max-width:520px){
+  .chat-win{left:8px;right:8px;bottom:8px;width:auto;height:calc(100vh - 16px);max-height:none}
+  .chat-fab{left:14px;bottom:14px;padding:14px;border-radius:50%}
+  .chat-fab span{display:none}
+}
+
 .reveal{opacity:0;transform:translateY(24px);transition:.7s cubic-bezier(.2,.7,.2,1)}
 .reveal.in{opacity:1;transform:none}
 </style>
@@ -287,6 +328,26 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
 <div class="cookie-bar" id="cookieBar">
   <span>Мы используем cookie и Яндекс.Метрику, чтобы сайт работал лучше. Продолжая пользоваться сайтом, вы соглашаетесь с <a href="cookies.html">использованием cookie</a> и <a href="privacy.html">политикой</a>.</span>
   <button class="cookie-ok" id="cookieOk">Принять</button>
+</div>
+
+<!-- AI-консультант (агент-продавец) -->
+<button class="chat-fab" id="chatFab" aria-label="Спросить AI-консультанта">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.2 7.6L3 20.5l1.4-5.3A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg>
+  <span>Спросить AI</span>
+</button>
+<div class="chat-win" id="chatWin" role="dialog" aria-label="AI-консультант AGBLAB AI">
+  <div class="chat-head">
+    <div class="chat-head-l">
+      <img class="chat-ava" src="assets/badge.png" alt="AGBLAB AI">
+      <div><b>AI-консультант</b><i>AGBLAB AI · отвечает за секунды</i></div>
+    </div>
+    <button class="chat-close" id="chatClose" aria-label="Закрыть">✕</button>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <form class="chat-input" id="chatForm">
+    <input id="chatText" placeholder="Опишите задачу…" autocomplete="off" maxlength="1000">
+    <button type="submit" aria-label="Отправить">➤</button>
+  </form>
 </div>
 
 <section class="hero">
@@ -668,6 +729,35 @@ document.querySelectorAll('.card').forEach(card=>{
   const hero=c.parentElement;
   hero.addEventListener('mousemove',e=>{const b=c.getBoundingClientRect();mouse.x=e.clientX-b.left;mouse.y=e.clientY-b.top;mouse.on=true;});
   hero.addEventListener('mouseleave',()=>{mouse.on=false;mouse.x=mouse.y=-9999;});
+})();
+
+// AI-консультант (агент-продавец)
+(function(){
+  const fab=document.getElementById('chatFab'), win=document.getElementById('chatWin'),
+        body=document.getElementById('chatBody'), form=document.getElementById('chatForm'),
+        input=document.getElementById('chatText'), closeb=document.getElementById('chatClose');
+  if(!fab)return;
+  const API='https://agblabai.ru/api/chat';
+  const GREET='Здравствуйте! 👋 Я AI-консультант AGBLAB AI. Расскажите, какую задачу хотите решить — подскажу решение и сориентирую по цене.';
+  let history=[], busy=false, greeted=false;
+  const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const linkify=s=>esc(s).replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+  function add(role,text){const d=document.createElement('div');d.className='msg '+(role==='me'?'me':'bot');d.innerHTML=linkify(text);body.appendChild(d);body.scrollTop=body.scrollHeight;}
+  function typing(on){let t=document.getElementById('chatTyping');if(on){if(t)return;t=document.createElement('div');t.id='chatTyping';t.className='chat-typing';t.innerHTML='<span></span><span></span><span></span>';body.appendChild(t);body.scrollTop=body.scrollHeight;}else if(t){t.remove();}}
+  function open(){win.classList.add('open');fab.classList.add('hide');if(!greeted){greeted=true;add('bot',GREET);}setTimeout(()=>input.focus(),200);if(window.ym)ym(109649413,'reachGoal','chat_open');}
+  function close(){win.classList.remove('open');fab.classList.remove('hide');}
+  fab.addEventListener('click',open);closeb.addEventListener('click',close);
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();const text=input.value.trim();if(!text||busy)return;
+    input.value='';add('me',text);history.push({role:'user',content:text});busy=true;typing(true);
+    try{
+      const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})});
+      const data=await r.json();typing(false);
+      const reply=data.reply||'Расскажите подробнее о задаче?';add('bot',reply);history.push({role:'assistant',content:reply});
+      if(data.lead&&window.ym)ym(109649413,'reachGoal','chat_lead');
+    }catch(err){typing(false);add('bot','Связь прервалась. Напишите нам в Telegram: https://t.me/agbagent_bot');}
+    busy=false;
+  });
 })();
 
 // счётчики (набегание чисел) — запуск при появлении

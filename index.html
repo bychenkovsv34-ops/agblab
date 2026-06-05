@@ -847,7 +847,7 @@ document.querySelectorAll('.card').forEach(card=>{
           const r=await fetch(STT,{method:'POST',headers:{'Content-Type':blob.type},body:blob});
           const data=await r.json();typing(false);
           const text=(data.text||'').trim();
-          if(text){input.value=text;send(text);}
+          if(text){input.value=text;input.focus();}
           else{add('bot','Не расслышал 🙈 Повторите голосом или напишите текстом.');}
         }catch(e){typing(false);add('bot','Не получилось распознать. Напишите текстом, пожалуйста.');}
       };

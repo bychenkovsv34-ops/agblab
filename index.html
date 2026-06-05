@@ -131,6 +131,7 @@ section{padding:90px 0}
   background:var(--accent);color:#fff;font-size:13px;font-weight:700;padding:5px 16px;border-radius:100px}
 .price .name{font-size:18px;font-weight:700;margin-bottom:6px}
 .price .amt{font-size:38px;font-weight:800;letter-spacing:-1px;margin:10px 0 4px}
+.price .amt.ind{font-size:22px;color:var(--accent);letter-spacing:0}
 .price .amt span{font-size:16px;color:var(--mut);font-weight:500}
 .price ul{list-style:none;margin:22px 0 28px;display:flex;flex-direction:column;gap:13px}
 .price li{display:flex;gap:11px;font-size:15px;color:var(--mut)}
@@ -494,13 +495,13 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
 
 <section id="pricing">
   <div class="wrap">
-    <div class="eyebrow reveal">Тарифы</div>
-    <h2 class="h2 reveal">Понятные цены</h2>
-    <p class="sub reveal">Финальную стоимость считаем под задачу. Ниже — ориентир, с чего начинают клиенты.</p>
+    <div class="eyebrow reveal">Форматы работы</div>
+    <h2 class="h2 reveal">Под ключ — под вашу задачу</h2>
+    <p class="sub reveal">Стоимость всегда индивидуальна и зависит от задачи. Точную цену называем после бесплатного разбора — без обязательств.</p>
     <div class="prices">
       <div class="price reveal">
         <div class="name">Лендинг</div>
-        <div class="amt">от 30 000 ₽</div>
+        <div class="amt ind">Индивидуально</div>
         <div style="color:var(--mut);font-size:14px">Сайт, который продаёт</div>
         <ul>
           <li>Современный дизайн</li>
@@ -513,7 +514,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
       <div class="price feat reveal">
         <div class="tag">Хит</div>
         <div class="name">AI-агент</div>
-        <div class="amt">от 60 000 ₽</div>
+        <div class="amt ind">Индивидуально</div>
         <div style="color:var(--mut);font-size:14px">Сотрудник, который не спит</div>
         <ul>
           <li>Бот в Telegram или на сайте</li>
@@ -526,7 +527,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
       </div>
       <div class="price reveal">
         <div class="name">Автоматизация</div>
-        <div class="amt">от 90 000 ₽</div>
+        <div class="amt ind">Индивидуально</div>
         <div style="color:var(--mut);font-size:14px">Система под ключ</div>
         <ul>
           <li>Связка сервисов: CRM, маркетплейсы, таблицы, чаты, сайты</li>
@@ -555,7 +556,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
     <div class="faq-list">
       <div class="faq-item reveal">
         <button class="faq-q">Сколько это стоит?<span class="faq-ic">+</span></button>
-        <div class="faq-a"><p>Финальную цену считаем под задачу — на сайте указаны ориентиры. Старт всегда с бесплатного разбора.</p></div>
+        <div class="faq-a"><p>Стоимость всегда индивидуальна и зависит от задачи. Точную цену называем после бесплатного разбора — он бесплатный и без обязательств.</p></div>
       </div>
       <div class="faq-item reveal">
         <button class="faq-q">Я не разбираюсь в ИИ — получится?<span class="faq-ic">+</span></button>
@@ -737,7 +738,7 @@ document.querySelectorAll('.card').forEach(card=>{
         input=document.getElementById('chatText'), closeb=document.getElementById('chatClose');
   if(!fab)return;
   const API='https://agblabai.ru/api/chat';
-  const GREET='Здравствуйте! 👋 Я AI-консультант AGBLAB AI. Расскажите, какую задачу хотите решить — подскажу решение и сориентирую по цене.';
+  const GREET='Здравствуйте! 👋 Я AI-консультант AGBLAB AI. Расскажите, какую задачу хотите решить — подскажу, как её закрыть, и предложу бесплатный разбор.';
   let history=[], busy=false, greeted=false;
   const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
   const linkify=s=>esc(s).replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');

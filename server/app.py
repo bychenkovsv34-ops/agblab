@@ -23,6 +23,10 @@ TELEGRAM_TOKEN    = os.environ.get("TELEGRAM_TOKEN", "")
 OWNER_ID          = os.environ.get("OWNER_TELEGRAM_ID", "")
 MODEL             = os.environ.get("SALES_MODEL", "claude-haiku-4-5-20251001")
 DEEPGRAM_API_KEY  = os.environ.get("DEEPGRAM_API_KEY", "")
+# Единый центр лидов (bot.db через max_bot /api/leads). Если задан — лиды идут туда
+# (запись в БД + уведомление в оба канала). Прямой TG остаётся фолбэком.
+LEADS_INTAKE_URL    = os.environ.get("LEADS_INTAKE_URL", "")
+LEADS_INTAKE_SECRET = os.environ.get("LEADS_INTAKE_SECRET", "")
 
 ALLOWED_ORIGINS = [
     "https://agblabai.ru", "https://www.agblabai.ru",
@@ -154,6 +158,24 @@ def send_lead_to_tg(lead: dict, repeat: bool = False):
     except Exception as e:
         log.warning("lead->tg failed: %s", e)
 
+def send_lead_to_center(lead: dict) -> bool:
+    """Шлёт лид в единый центр (max_bot /api/leads → bot.db + уведомление в TG и MAX).
+    True при успехе. Дедуп по контакту делает сам центр."""
+    if not LEADS_INTAKE_URL:
+        return False
+    try:
+        r = httpx.post(
+            LEADS_INTAKE_URL,
+            headers={"X-Intake-Secret": LEADS_INTAKE_SECRET} if LEADS_INTAKE_SECRET else {},
+            json={"name": lead.get("name"), "contact": lead.get("contact"),
+                  "text": lead.get("task"), "ready_for_call": True},
+            timeout=10,
+        )
+        return r.status_code == 200 and bool(r.json().get("ok"))
+    except Exception as e:
+        log.warning("lead->center failed: %s", e)
+        return False
+
 @app.get("/api/health")
 def health():
     return {"ok": True, "model": MODEL}
@@ -201,7 +223,9 @@ async def chat(body: ChatIn, request: Request):
             lead = None
         reply = LEAD_RE.sub("", reply).strip()
     if lead:
-        send_lead_to_tg(lead, check_repeat(lead))
+        # Сначала в единый центр; если он недоступен — фолбэк в прямой TG (лид не теряем).
+        if not send_lead_to_center(lead):
+            send_lead_to_tg(lead, check_repeat(lead))
 
     return JSONResponse({"reply": reply or "Расскажите подробнее о задаче?", "lead": bool(lead)})
 

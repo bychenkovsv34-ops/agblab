@@ -77,7 +77,7 @@ nav{display:flex;align-items:center;justify-content:space-between;height:68px}
 .hero .glow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);
   width:900px;height:600px;background:radial-gradient(circle,var(--glow),transparent 60%);
   filter:blur(40px);opacity:.5;pointer-events:none;z-index:0}
-.hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.55}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.7}
 .hero .wrap{position:relative;z-index:2}
 .pill{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--accent);
   border:1px solid var(--line);background:var(--bg2);padding:8px 16px;border-radius:100px;margin-bottom:28px}
@@ -696,32 +696,54 @@ document.querySelectorAll('.card').forEach(card=>{
   calc();
 })();
 
-// интерактивный фон hero (сеть точек, реагирует на курсор)
+// интерактивный фон hero — красная сеть + белые звёзды-созвездия
 (function(){
   const c=document.getElementById('heroCanvas'); if(!c)return;
   const reduce=window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ctx=c.getContext('2d');
-  let W,H,nodes,raf; const mouse={x:-9999,y:-9999,on:false};
-  const C1={r:255,g:59,b:59}, C2={r:255,g:122,b:69}, MAXD=140, MOUSED=170;
+  let W,H,nodes,stars,raf,tick=0; const mouse={x:-9999,y:-9999,on:false};
+  const C1={r:255,g:59,b:59}, C2={r:255,g:122,b:69}, MAXD=140, MOUSED=170, STARD=160;
   const num=()=>innerWidth<700?22:46;
   const mix=t=>Math.round(C1.r+(C2.r-C1.r)*t)+','+Math.round(C1.g+(C2.g-C1.g)*t)+','+Math.round(C1.b+(C2.b-C1.b)*t);
   function resize(){const b=c.getBoundingClientRect();W=c.width=b.width;H=c.height=b.height;}
-  function mk(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,t:Math.random()};}
-  function init(){resize();nodes=Array.from({length:num()},mk);}
+  function mkNode(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,t:Math.random()};}
+  function mkStar(){return{x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.12,r:1.1+Math.random()*1.5,ph:Math.random()*6.28,sp:.02+Math.random()*.035};}
+  function init(){resize();const n=num();nodes=Array.from({length:n},mkNode);stars=Array.from({length:Math.max(4,Math.round(n*0.3))},mkStar);}
   function frame(){
+    tick++;
     ctx.clearRect(0,0,W,H);
+    // красная сеть
     for(let i=0;i<nodes.length;i++){
       const a=nodes[i];
       for(let j=i+1;j<nodes.length;j++){
         const b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
-        if(d<MAXD){ctx.strokeStyle='rgba('+mix((a.t+b.t)/2)+','+((1-d/MAXD)*.18).toFixed(3)+')';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+        if(d<MAXD){ctx.strokeStyle='rgba('+mix((a.t+b.t)/2)+','+((1-d/MAXD)*.24).toFixed(3)+')';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
       }
       if(mouse.on){const dx=a.x-mouse.x,dy=a.y-mouse.y,d=Math.hypot(dx,dy);
-        if(d<MOUSED){ctx.strokeStyle='rgba('+mix(a.t)+','+((1-d/MOUSED)*.34).toFixed(3)+')';ctx.lineWidth=.9;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(mouse.x,mouse.y);ctx.stroke();a.vx+=(dx<0?.0025:-.0025);a.vy+=(dy<0?.0025:-.0025);}}
+        if(d<MOUSED){ctx.strokeStyle='rgba('+mix(a.t)+','+((1-d/MOUSED)*.42).toFixed(3)+')';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(mouse.x,mouse.y);ctx.stroke();a.vx+=(dx<0?.0025:-.0025);a.vy+=(dy<0?.0025:-.0025);}}
     }
-    for(const n of nodes){ctx.fillStyle='rgba('+mix(n.t)+',.6)';ctx.beginPath();ctx.arc(n.x,n.y,1.7,0,6.2832);ctx.fill();
+    for(const n of nodes){ctx.fillStyle='rgba('+mix(n.t)+',.78)';ctx.beginPath();ctx.arc(n.x,n.y,1.9,0,6.2832);ctx.fill();
       n.x+=n.vx;n.y+=n.vy;n.vx*=.998;n.vy*=.998;
       if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;}
+    // белые линии-созвездия: каждая звезда → 2 ближайшие
+    for(let i=0;i<stars.length;i++){
+      const a=stars[i]; let best=[];
+      for(let j=0;j<stars.length;j++){if(j===i)continue;const b=stars[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<STARD)best.push([d,b]);}
+      best.sort((x,y)=>x[0]-y[0]);
+      for(let k=0;k<Math.min(2,best.length);k++){const d=best[k][0],b=best[k][1];
+        ctx.strokeStyle='rgba(255,255,255,'+((1-d/STARD)*.26).toFixed(3)+')';ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+    }
+    // белые звёзды — мерцают и светятся
+    for(const s of stars){
+      const tw=.4+.6*Math.abs(Math.sin(tick*s.sp+s.ph));
+      ctx.save();
+      ctx.shadowColor='rgba(255,255,255,.95)';ctx.shadowBlur=9*tw;
+      ctx.fillStyle='rgba(255,255,255,'+(.55+.45*tw).toFixed(3)+')';
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.2832);ctx.fill();
+      ctx.restore();
+      s.x+=s.vx;s.y+=s.vy;
+      if(s.x<0||s.x>W)s.vx*=-1;if(s.y<0||s.y>H)s.vy*=-1;
+    }
     if(!reduce)raf=requestAnimationFrame(frame);
   }
   init();frame();

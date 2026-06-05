@@ -515,7 +515,9 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
         <div class="name">Лендинг</div>
         <div class="amt ind">Индивидуально</div>
         <div style="color:var(--mut);font-size:14px">Сайт, который продаёт</div>
+        <div style="color:var(--accent);font-size:12.5px;margin-top:6px;font-weight:600">⚡ Собран в AGBLAB AI — как этот сайт</div>
         <ul>
+          <li><strong>Готовый сайт за 1 день</strong></li>
           <li>Современный дизайн</li>
           <li>Адаптив под телефон</li>
           <li>Форма заявок</li>
@@ -632,6 +634,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
       </div>
     </div>
     <div class="foot-legal">
+      <div style="color:var(--accent);font-weight:600">⚡ Этот сайт создан в студии AGBLAB AI® — и ваш сделаем так же.</div>
       <div>ИП Быченков Сергей Владимирович · ИНН 344403876120 · ОГРНИП 323508100092353</div>
       <div>© 2026 AGBLAB AI® · товарный знак №&nbsp;1225812 · AI-агенты · Автоматизация · Сайты. Все права защищены.</div>
     </div>
@@ -785,27 +788,32 @@ document.querySelectorAll('.card').forEach(card=>{
         input=document.getElementById('chatText'), closeb=document.getElementById('chatClose'),
         ttsBtn=document.getElementById('chatTts'), micBtn=document.getElementById('chatMic');
   if(!fab)return;
-  const API='https://agblabai.ru/api/chat', STT='https://agblabai.ru/api/stt';
+  const API='https://agblabai.ru/api/chat', STT='https://agblabai.ru/api/stt', TTS_API='https://agblabai.ru/api/tts';
   const GREET='Здравствуйте! 👋 Я AI-консультант AGBLAB AI. Расскажите, какую задачу хотите решить — подскажу, как её закрыть, и предложу бесплатный разбор.';
-  let history=[], busy=false, greeted=false, tts=true, ruVoice=null;
+  let history=[], busy=false, greeted=false, tts=false, curAudio=null;
   const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
   const linkify=s=>esc(s).replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
   function add(role,text){const d=document.createElement('div');d.className='msg '+(role==='me'?'me':'bot');d.innerHTML=linkify(text);body.appendChild(d);body.scrollTop=body.scrollHeight;}
   function typing(on){let t=document.getElementById('chatTyping');if(on){if(t)return;t=document.createElement('div');t.id='chatTyping';t.className='chat-typing';t.innerHTML='<span></span><span></span><span></span>';body.appendChild(t);body.scrollTop=body.scrollHeight;}else if(t){t.remove();}}
 
-  // озвучка (TTS)
-  function pickVoice(){const vs=speechSynthesis.getVoices();ruVoice=vs.find(v=>/ru[-_]?RU/i.test(v.lang))||vs.find(v=>/^ru/i.test(v.lang))||null;}
-  if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
-  function speak(text){
-    if(!tts||!('speechSynthesis' in window))return;
+  // озвучка (TTS, Silero на сервере) — по умолчанию ВЫКЛ, включается вручную
+  ttsBtn.textContent='🔇'; ttsBtn.classList.add('off'); ttsBtn.title='Озвучка выключена — нажмите, чтобы включить';
+  function stopAudio(){if(curAudio){try{curAudio.pause();}catch(e){}curAudio=null;}}
+  async function speak(text){
+    if(!tts)return;
     const clean=text.replace(/https?:\/\/[^\s]+/g,'').replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}]/gu,'').trim();
     if(!clean)return;
-    try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(clean);u.lang='ru-RU';if(ruVoice)u.voice=ruVoice;u.rate=1.04;speechSynthesis.speak(u);}catch(e){}
+    try{
+      const r=await fetch(TTS_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:clean})});
+      if(!r.ok)return;
+      const blob=await r.blob(); if(!tts)return; stopAudio();
+      curAudio=new Audio(URL.createObjectURL(blob)); curAudio.play().catch(()=>{});
+    }catch(e){}
   }
-  ttsBtn.addEventListener('click',()=>{tts=!tts;ttsBtn.textContent=tts?'🔊':'🔇';ttsBtn.classList.toggle('off',!tts);if(!tts){try{speechSynthesis.cancel();}catch(e){}}});
+  ttsBtn.addEventListener('click',()=>{tts=!tts;ttsBtn.textContent=tts?'🔊':'🔇';ttsBtn.classList.toggle('off',!tts);ttsBtn.title=tts?'Озвучка включена':'Озвучка выключена — нажмите, чтобы включить';if(!tts)stopAudio();});
 
   function open(){win.classList.add('open');fab.classList.add('hide');if(!greeted){greeted=true;add('bot',GREET);speak(GREET);}setTimeout(()=>input.focus(),200);if(window.ym)ym(109649413,'reachGoal','chat_open');}
-  function close(){win.classList.remove('open');fab.classList.remove('hide');try{speechSynthesis.cancel();}catch(e){}}
+  function close(){win.classList.remove('open');fab.classList.remove('hide');stopAudio();}
   fab.addEventListener('click',open);closeb.addEventListener('click',close);
 
   async function send(text){

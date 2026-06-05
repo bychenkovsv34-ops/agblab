@@ -11,7 +11,7 @@ import anthropic
 import httpx
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -222,3 +222,41 @@ async def stt(request: Request):
         log.warning("stt error: %s", e)
         text = ""
     return JSONResponse({"text": text})
+
+# ── Silero TTS (озвучка ответов) ──
+SILERO_PATH = "/opt/agb-sales/v4_ru.pt"
+TTS_SPEAKER = os.environ.get("TTS_SPEAKER", "eugene")   # eugene/aidar (м), baya/kseniya/xenia (ж)
+TTS_SR      = 48000
+MAX_TTS_LEN = 600
+_tts = None
+
+def get_tts():
+    global _tts
+    if _tts is None:
+        import torch
+        torch.set_num_threads(1)
+        _tts = torch.package.PackageImporter(SILERO_PATH).load_pickle("tts_models", "model")
+        _tts.to("cpu")
+    return _tts
+
+@app.post("/api/tts")
+async def tts(body: dict, request: Request):
+    ip = request.headers.get("x-forwarded-for", request.client.host).split(",")[0].strip()
+    if not rate_ok(ip):
+        return Response(status_code=429)
+    text = str(body.get("text", ""))[:MAX_TTS_LEN].strip()
+    if not text:
+        return Response(status_code=204)
+    try:
+        import io, wave
+        m = get_tts()
+        audio = m.apply_tts(text=text, speaker=TTS_SPEAKER, sample_rate=TTS_SR,
+                            put_accent=True, put_yo=True)
+        pcm = (audio.numpy() * 32767).astype("<i2")
+        buf = io.BytesIO()
+        with wave.open(buf, "wb") as w:
+            w.setnchannels(1); w.setsampwidth(2); w.setframerate(TTS_SR); w.writeframes(pcm.tobytes())
+        return Response(content=buf.getvalue(), media_type="audio/wav")
+    except Exception as e:
+        log.warning("tts error: %s", e)
+        return Response(status_code=500)

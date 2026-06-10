@@ -472,6 +472,39 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
   </div>
 </section>
 
+<style>
+.offer-band{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:18px;padding:clamp(36px,5vw,58px) clamp(22px,4vw,44px);text-align:center;
+  background:radial-gradient(90% 130% at 82% 0%,rgba(255,59,59,.12),transparent 55%),radial-gradient(70% 120% at 8% 100%,rgba(255,122,69,.10),transparent 60%),var(--card)}
+.offer-band .eyebrow{justify-content:center}
+.offer-h{font-size:clamp(27px,4.6vw,46px);font-weight:800;line-height:1.1;letter-spacing:-.5px;margin:8px 0 16px;text-wrap:balance}
+.offer-h span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.offer-sub{color:var(--mut);max-width:680px;margin:0 auto 40px;font-size:clamp(15.5px,2vw,18px);text-wrap:balance}
+.offer-points{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:left;margin-bottom:32px}
+@media(max-width:760px){.offer-points{grid-template-columns:1fr}}
+.op{background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:13px;padding:22px 22px 24px;transition:.25s}
+.op:hover{border-color:var(--accent);transform:translateY(-3px)}
+.op-i{font-size:25px;margin-bottom:12px}
+.op b{display:block;font-size:16.5px;margin-bottom:7px}
+.op span{color:var(--mut);font-size:14.5px;line-height:1.55}
+.offer-foot{font-size:clamp(17px,2.6vw,23px);font-weight:700;letter-spacing:-.3px}
+.offer-foot span{color:var(--accent)}
+</style>
+<section id="offer">
+  <div class="wrap">
+    <div class="offer-band reveal">
+      <div class="eyebrow">Чем мы отличаемся</div>
+      <h2 class="offer-h">AI-продавец, который <span>полностью ваш</span></h2>
+      <p class="offer-sub">Не аренда чужого сервиса, а ваш личный сайт и нейро-продавец на вашем сервере — работают в России без VPN и блокировок.</p>
+      <div class="offer-points">
+        <div class="op"><div class="op-i">🇷🇺</div><b>Ваш сайт и AI-продавец</b><span>На российском домене и вашем сервере. Код и агент принадлежат вам — это ваш актив.</span></div>
+        <div class="op"><div class="op-i">🔓</div><b>Без VPN и блокировок</b><span>Работает в России — в Telegram и MAX. Не зависит от чужих платформ, которые могут закрыть.</span></div>
+        <div class="op"><div class="op-i">💼</div><b>Без подписок</b><span>Никаких ежемесячных подписок и платы за чужую платформу — только аренда вашего сервера.</span></div>
+      </div>
+      <p class="offer-foot">Свой продавец <span>в кармане</span> — всегда на связи и всегда ваш.</p>
+    </div>
+  </div>
+</section>
+
 <section id="why">
   <div class="wrap">
     <div class="eyebrow reveal">Почему мы</div>

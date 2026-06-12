@@ -304,6 +304,23 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
 
 .reveal{opacity:0;transform:translateY(24px);transition:.7s cubic-bezier(.2,.7,.2,1)}
 .reveal.in{opacity:1;transform:none}
+/* Наши работы (портфолио) */
+.works-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:36px}
+@media(max-width:760px){.works-grid{grid-template-columns:1fr}}
+.work-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:.25s}
+.work-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.work-shot{aspect-ratio:16/10;overflow:hidden;background:var(--bg2)}
+.work-shot img{width:100%;height:100%;object-fit:cover;display:block;transition:.45s}
+.work-card:hover .work-shot img{transform:scale(1.05)}
+.work-body{padding:20px 22px 24px;display:flex;flex-direction:column;flex:1}
+.work-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.work-tags span{font-size:11.5px;color:var(--accent);border:1px solid var(--line);background:rgba(255,59,59,.07);padding:4px 10px;border-radius:20px}
+.work-body h3{font-size:21px;margin-bottom:8px}
+.work-body p{color:var(--mut);font-size:15px;margin-bottom:16px;flex:1}
+.work-link{color:var(--accent);font-weight:700;font-size:14.5px}
+.work-card.soon{opacity:.7}
+.soon-shot{display:flex;align-items:center;justify-content:center}
+.soon-shot span{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--mut);border:1px dashed var(--line);padding:10px 22px;border-radius:30px}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -323,6 +340,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
         <a href="#znakomo">Знакомо?</a>
         <a href="#services">Услуги</a>
         <a href="#how">Как работаем</a>
+        <a href="#works">Работы</a>
         <a href="#pricing">Цены</a>
         <a href="#contact">Контакты</a>
       </div>
@@ -334,6 +352,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
     <a href="#znakomo">Знакомо?</a>
     <a href="#services">Услуги</a>
     <a href="#how">Как работаем</a>
+    <a href="#works">Работы</a>
     <a href="#pricing">Цены</a>
     <a href="#contact">Контакты</a>
     <a href="#contact" class="btn">Обсудить проект</a>
@@ -525,6 +544,34 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9.5" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.6" r="1.1" fill="currentColor" stroke="none"/></svg></div>
         <h3>Ваше, а не подписка</h3>
         <p>Решение работает на вашем коде и вашей базе — это ваш актив, а не аренда чужой платформы. Бренд официальный: товарный знак №&nbsp;1225812.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="works">
+  <div class="wrap">
+    <div class="eyebrow reveal">Наши работы</div>
+    <h2 class="h2 reveal">Примеры, которые уже работают</h2>
+    <p class="sub reveal">Живые проекты на нашем коде и российских серверах — открываются из России без VPN. Список будет пополняться.</p>
+    <div class="works-grid">
+      <a class="work-card reveal" href="https://mpk-doska.ru" target="_blank" rel="noopener" onclick="if(window.ym)ym(109649413,'reachGoal','work_mpk')">
+        <div class="work-shot"><img src="assets/works/mpk.jpg" alt="МПК-доска — сайт с каталогом и AI-продавцом" loading="lazy"></div>
+        <div class="work-body">
+          <div class="work-tags"><span>Сайт</span><span>Каталог</span><span>Калькулятор</span><span>AI-продавец</span></div>
+          <h3>МПК-доска</h3>
+          <p>Продающий сайт террасной доски: каталог с реальными цветами, калькулятор стоимости и живой нейропродавец — консультирует и собирает заявки. Работает из России без VPN.</p>
+          <span class="work-link">Открыть сайт →</span>
+        </div>
+      </a>
+      <div class="work-card soon reveal">
+        <div class="work-shot soon-shot"><span>Скоро</span></div>
+        <div class="work-body">
+          <div class="work-tags"><span>Ваш проект</span></div>
+          <h3>Здесь может быть ваш проект</h3>
+          <p>Сайт, бот или AI-агент под вашу задачу — с такой же отдачей. Обсудим на бесплатном разборе, что автоматизировать первым.</p>
+          <a href="#contact" class="work-link">Обсудить →</a>
+        </div>
       </div>
     </div>
   </div>
@@ -741,7 +788,7 @@ const spy=new IntersectionObserver(es=>es.forEach(e=>{
   const a=navMap[e.target.id]; if(!a)return;
   if(e.isIntersecting){Object.values(navMap).forEach(x=>x.classList.remove('active'));a.classList.add('active')}
 }),{rootMargin:'-45% 0px -50% 0px'});
-['znakomo','services','how','pricing','contact'].forEach(id=>{const s=document.getElementById(id);if(s)spy.observe(s)});
+['znakomo','services','how','works','pricing','contact'].forEach(id=>{const s=document.getElementById(id);if(s)spy.observe(s)});
 
 // спотлайт за курсором на карточках
 document.querySelectorAll('.card').forEach(card=>{

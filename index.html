@@ -246,6 +246,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .msg-btn svg{width:24px;height:24px}
 .msg-btn.tg{background:#2aabee;box-shadow:0 10px 30px rgba(42,171,238,.3)}
 .msg-btn.max{background:linear-gradient(135deg,#4f7cf7,#a24bff);box-shadow:0 10px 30px rgba(140,60,240,.3)}
+.msg-btn.ai-ask{background:linear-gradient(135deg,#ff3b3b,#ff8c00);box-shadow:0 10px 30px rgba(255,59,0,.3);color:#fff;border:none;cursor:pointer;font-family:inherit}
 .msg-ico-img{width:27px;height:27px;border-radius:8px;display:block;flex-shrink:0}
 .msg-note{text-align:center;color:var(--mut);font-size:14px}
 .msg-consent{text-align:center;color:var(--mut);font-size:13px;margin-top:10px}
@@ -785,6 +786,10 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
         <img class="msg-ico-img" src="assets/max-icon.png" alt="MAX">
         Написать в MAX
       </a>
+      <button class="msg-btn ai-ask" onclick="document.getElementById('chatFab').click();if(window.ym)ym(109649413,'reachGoal','lead_chat')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.2 7.6L3 20.5l1.4-5.3A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg>
+        Спросить нейросотрудника
+      </button>
     </div>
     <div class="contacts-row reveal">
       <a href="tel:+79017475277" class="contact-link">

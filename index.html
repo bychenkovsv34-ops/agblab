@@ -432,6 +432,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
   </div>
   <div class="chat-body" id="chatBody"></div>
   <form class="chat-input" id="chatForm">
+    <input type="text" id="chatWebsite" name="website" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
     <button type="button" class="chat-mic" id="chatMic" aria-label="Сказать голосом" title="Сказать голосом">🎤</button>
     <input id="chatText" placeholder="Опишите задачу…" autocomplete="off" maxlength="1000">
     <button type="submit" aria-label="Отправить">➤</button>
@@ -1120,7 +1121,7 @@ document.querySelectorAll('.card').forEach(card=>{
     }catch(err){typing(false);add('bot','Связь прервалась. Напишите нам в Telegram: https://t.me/agbagent_bot');}
     busy=false;
   }
-  form.addEventListener('submit',e=>{e.preventDefault();const t=input.value.trim();if(!t||busy)return;input.value='';send(t);});
+  form.addEventListener('submit',e=>{e.preventDefault();if(document.getElementById('chatWebsite').value)return;const t=input.value.trim();if(!t||busy)return;if(window.ym)ym(109649413,'reachGoal','form_submit');input.value='';send(t);});
 
   // голосовой ввод (STT через Deepgram)
   let rec=null, chunks=[], recording=false;

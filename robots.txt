@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /privacy.html
+Disallow: /terms.html
+Disallow: /offer.html
+Disallow: /cookies.html
+
+Sitemap: https://agblabai.ru/sitemap.xml

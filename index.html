@@ -299,7 +299,9 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
 .chat-fab{position:fixed;left:20px;bottom:20px;z-index:70;display:inline-flex;align-items:center;gap:9px;
   background:var(--accent);color:#fff;border:none;border-radius:100px;padding:13px 20px 13px 16px;font-weight:700;
   font-size:15px;font-family:inherit;cursor:pointer;box-shadow:0 12px 30px var(--glow);transition:.2s}
-.chat-fab:hover{transform:translateY(-2px)}
+@keyframes chatfab-pulse{0%,100%{box-shadow:0 12px 30px var(--glow)}50%{box-shadow:0 12px 30px var(--glow),0 0 0 10px rgba(255,59,59,.12)}}
+.chat-fab:not(.hide){animation:chatfab-pulse 2.8s ease-in-out infinite}
+.chat-fab:hover{transform:translateY(-2px);animation:none}
 .chat-fab svg{width:22px;height:22px}
 .chat-fab.hide{opacity:0;pointer-events:none;transform:scale(.8)}
 .chat-win{position:fixed;left:20px;bottom:20px;z-index:71;width:380px;max-width:calc(100vw - 32px);height:560px;
@@ -1160,6 +1162,7 @@ document.querySelectorAll('.card').forEach(card=>{
   function open(){win.classList.add('open');fab.classList.add('hide');if(!greeted){greeted=true;add('bot',GREET);}setTimeout(()=>input.focus(),200);if(window.ym)ym(109649413,'reachGoal','chat_open');}
   function close(){win.classList.remove('open');fab.classList.remove('hide');}
   fab.addEventListener('click',open);closeb.addEventListener('click',close);
+  if(!sessionStorage.getItem('chatAutoOpened')){setTimeout(()=>{if(!win.classList.contains('open')){open();sessionStorage.setItem('chatAutoOpened','1');}},30000);}
 
   async function send(text){
     add('me',text);history.push({role:'user',content:text});busy=true;typing(true);

@@ -910,6 +910,22 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
 </footer>
 
 <script>
+// ── АКЦИЯ МЕСЯЦА — обновлять в начале каждого месяца ──────────────
+const PROMO={
+  label:   'Акция июля',
+  text:    'AI-продавец или сайт под ключ — на 30% ниже рынка',
+  seats:   7,
+  active:  true   // false — скрыть полосу
+};
+(function(){
+  const s=document.querySelector('.promo-strip');
+  if(!s)return;
+  if(!PROMO.active){s.style.display='none';document.querySelector('header').style.top='0';document.querySelector('.hero').style.paddingTop='150px';return;}
+  s.querySelector('.promo-badge').textContent='🔥 '+PROMO.label;
+  s.querySelector('.promo-text').innerHTML=PROMO.text+' · Осталось <b>'+PROMO.seats+' мест из 10</b>';
+})();
+// ──────────────────────────────────────────────────────────────────
+
 // header shadow on scroll
 const hdr=document.getElementById('hdr');
 addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>10));

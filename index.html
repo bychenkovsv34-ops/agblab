@@ -353,7 +353,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
 .chat-input button.chat-mic:hover{border-color:var(--accent)}
 .chat-input button.chat-mic.rec{background:var(--accent);color:#fff;border-color:var(--accent);animation:micpulse 1s infinite}
 @keyframes micpulse{0%,100%{box-shadow:0 0 0 0 var(--glow)}50%{box-shadow:0 0 0 7px transparent}}
-.chat-voice-hint{font-size:11px;color:var(--mut);text-align:center;padding:4px 12px 8px;margin:0}
+.chat-voice-hint{font-size:11px;color:var(--txt);opacity:.55;text-align:center;padding:4px 12px 8px;margin:0}
 @media(max-width:520px){
   .chat-win{left:8px;right:8px;bottom:8px;width:auto;height:calc(100dvh - 16px);max-height:none}
   .chat-fab{left:14px;bottom:84px}
@@ -1225,7 +1225,7 @@ document.querySelectorAll('.card').forEach(card=>{
         micBtn=document.getElementById('chatMic');
   if(!fab)return;
   const API='https://agblabai.ru/api/chat', STT='https://agblabai.ru/api/stt';
-  const GREET='Здравствуйте! 👋 Меня зовут Ксения, я консультант AGBLAB AI. Расскажите, что хотите наладить в бизнесе — подскажу и предложу бесплатный разбор вашей задачи.';
+  const GREET='Здравствуйте! Я Ксения, консультант AGBLAB AI.\n\nПомогу разобраться, что в вашем бизнесе можно автоматизировать, где теряются заявки, время или контроль, и с чего лучше начать.\n\nРасскажите, пожалуйста, какая задача сейчас сильнее всего забирает у вас время или создаёт проблемы?';
   let history=[], busy=false, greeted=false;
   const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
   const linkify=s=>esc(s).replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');

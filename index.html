@@ -1226,6 +1226,7 @@ document.querySelectorAll('.card').forEach(card=>{
   if(!fab)return;
   const API='https://agblabai.ru/api/chat', STT='https://agblabai.ru/api/stt';
   const GREET='Здравствуйте! Я Ксения, консультант AGBLAB AI.\n\nПомогу разобраться, что в вашем бизнесе можно автоматизировать, где теряются заявки, время или контроль, и с чего лучше начать.\n\nРасскажите, пожалуйста, какая задача сейчас сильнее всего забирает у вас время или создаёт проблемы?';
+  const SID=sessionStorage.getItem('agb_sid')||(()=>{const id=(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now().toString(36));sessionStorage.setItem('agb_sid',id);return id;})();
   let history=[], busy=false, greeted=false;
   const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
   const linkify=s=>esc(s).replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
@@ -1240,10 +1241,11 @@ document.querySelectorAll('.card').forEach(card=>{
   async function send(text){
     add('me',text);history.push({role:'user',content:text});busy=true;typing(true);
     try{
-      const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history})});
+      const lead_done=!!sessionStorage.getItem('agb_lead');
+      const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history,session_id:SID,lead_done})});
       const data=await r.json();typing(false);
       const reply=data.reply||'Расскажите подробнее о задаче?';add('bot',reply);history.push({role:'assistant',content:reply});
-      if(data.lead&&window.ym)ym(109649413,'reachGoal','chat_lead');
+      if(data.lead){sessionStorage.setItem('agb_lead','1');if(window.ym)ym(109649413,'reachGoal','chat_lead');}
     }catch(err){typing(false);add('bot','Связь прервалась. Напишите нам в Telegram: https://t.me/agbagent_bot');}
     busy=false;
   }

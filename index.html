@@ -353,6 +353,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
 .chat-input button.chat-mic:hover{border-color:var(--accent)}
 .chat-input button.chat-mic.rec{background:var(--accent);color:#fff;border-color:var(--accent);animation:micpulse 1s infinite}
 @keyframes micpulse{0%,100%{box-shadow:0 0 0 0 var(--glow)}50%{box-shadow:0 0 0 7px transparent}}
+.chat-voice-hint{font-size:11px;color:var(--mut);text-align:center;padding:4px 12px 8px;margin:0}
 @media(max-width:520px){
   .chat-win{left:8px;right:8px;bottom:8px;width:auto;height:calc(100dvh - 16px);max-height:none}
   .chat-fab{left:14px;bottom:84px}
@@ -491,6 +492,7 @@ footer{border-top:1px solid var(--line);padding:42px 0 36px;color:var(--mut);fon
     <input id="chatText" placeholder="Опишите задачу…" autocomplete="off" maxlength="1000">
     <button type="submit" aria-label="Отправить">➤</button>
   </form>
+  <p class="chat-voice-hint">🎤 Можно голосом — нажми микрофон, скажи, нажми снова</p>
 </div>
 
 <section class="hero">

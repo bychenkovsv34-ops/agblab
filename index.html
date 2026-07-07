@@ -1279,6 +1279,14 @@ document.querySelectorAll('.card').forEach(card=>{
   }
   function stopRec(){if(rec&&recording){recording=false;try{rec.stop();}catch(e){}}}
   micBtn.addEventListener('click',()=>{recording?stopRec():startRec();});
+
+  // При закрытии страницы — отправить диалог если есть сообщения и лид ещё не создан
+  window.addEventListener('beforeunload',()=>{
+    if(history.length>=2&&!sessionStorage.getItem('agb_lead')){
+      const payload=JSON.stringify({messages:history,session_id:SID});
+      navigator.sendBeacon('https://agblabai.ru/api/end-chat',new Blob([payload],{type:'application/json'}));
+    }
+  });
 })();
 
 // счётчики (набегание чисел) — запуск при появлении
